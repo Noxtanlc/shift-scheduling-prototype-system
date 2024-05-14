@@ -6,7 +6,7 @@
 <br/>
 <h3>Setting up</h3>
 <p>
-To run the application, download the source code and extract it whenever you like. Run CMD/Terminal in the folder or <blockquote>cd <i>pathname</i></blockquote> in CMD for each individual folder (client and server). 
+To run the application, download the source code and extract it whenever you like. Run CMD/Terminal in the folder or in CMD run the command below for each individual folder (client and server). <blockquote>cd <i>pathname_of_the_folder</i></blockquote> 
 </p>
 <br/>
 <i>- Tan Li Chuang</i>
