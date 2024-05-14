@@ -1,0 +1,32 @@
+/*-----------------------------------------------------------*/
+#topbar {
+    position: absolute;
+    margin-top: 2.9rem;
+    max-height: calc(100vh - 2.9rem);
+}
+/*-----------------------------------------------------------*/
+
+.mantine-NavLink-root {
+    font-weight: bold;
+}
+
+.mantine-NavLink-children {
+    padding: 0;
+    margin-left: 1.5rem;
+    border-left: 1px black solid;
+}
+
+.mantine-NavLink-children {
+    padding: 0;
+    margin-left: 1.5rem;
+    border-left: 1px solid;
+    border-color: black;
+}
+
+.dark .mantine-NavLink-children {
+    border-color: white;
+}
+
+.dark .mantine-Burger-root {
+    --burger-color: white !important;
+}

@@ -1,0 +1,64 @@
+import { useEffect, useState } from "react";
+import DataTable, { TableColumn } from "react-data-table-component";
+import { nameFilter } from "./nameFilter";
+import Loader from "@/common/loader";
+
+export function ShiftTable({ ...props }) {
+    const [filterText, setFilterText] = useState('');
+    const [shift, setShift] = useState([])
+    const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+    const filteredItems = shift.filter(
+        (ele: any) => ele.staff_name && ele.staff_name.toLowerCase().includes(filterText.toLowerCase()),
+    );
+
+    useEffect(() => {
+        setShift(props.shift)
+    }, [props.shift]);
+
+    const filter = nameFilter({
+        colTitle: "Name",
+        filterText: filterText,
+        setFilterText: setFilterText,
+        resetPaginationToggle: resetPaginationToggle,
+        setResetPaginationToggle: setResetPaginationToggle,
+    });
+
+    const columns:TableColumn<any>[] = [
+        {
+            name: filter,
+            selector: (row: any) => row.staff_name,
+            center: false,
+            minWidth: "250px",
+        },
+    ];
+
+    for (let d = 1; d <= props.curMonthDays; d++) {
+        columns.push(
+            {
+                name: d.toString(),
+                center: true,
+                cell: (row: any) => (
+                    <div id="shiftCell" style={{ backgroundColor: row.shiftDay[d - 1]["st_colorcoding"] }} >
+                        <div className="text-center">{row.shiftDay[d - 1]["st_alias"]}</div>
+                        <div className="text-center">{row.shiftDay[d - 1]["ca_alias"] ? "(" + row.shiftDay[d - 1]["ca_alias"] + ")" : ""}</div>
+                    </div>
+                ),
+            }
+        )
+    }
+
+    return (
+        shift.length === 0 ? (
+            <Loader />
+        ) : (
+        <DataTable
+            columns={columns}
+            data={filteredItems}
+            responsive
+            pagination
+            paginationResetDefaultPage={resetPaginationToggle}
+            persistTableHead
+        />
+        )
+    )
+}

@@ -1,0 +1,71 @@
+:root {
+  font-size: 1rem;
+}
+
+.mantine-InputWrapper-root {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mantine-Modal-close {
+  color: white;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.rdt_TableCol {
+  font-weight: theme("fontWeight.bold");
+  font-size: theme("fontSize.sm");
+}
+
+#quickTile {
+  margin: theme('margin.1');
+  background-color: theme('backgroundColor.sky.600');
+  font-weight: theme('fontWeight.bold');
+  font-size: 0.6rem;
+  text-align: center;
+  height: 6rem;
+  width: 6rem;
+}
+
+#quickTile:hover {
+  background-color: theme('backgroundColor.sky.800');
+}
+
+@media (max-width: 640px) {
+  #quickTile {
+    padding: 0;
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+}
+
+#quickTile .mantine-Button-label {
+  text-wrap: wrap;
+}
+
+.groupTable {
+  border-radius: 10px !important ;
+}
+
+.staff {
+  padding: 0.4rem;
+  background-color: rgb(60, 165, 213);
+  font-weight: 700;
+  color: white;
+  margin-right: 0.25rem;
+  border-radius: 10px;
+}
+
+#actionBtn:hover {
+  background-color: hsla(0, 0%, 65%, 0.5);
+  transition-duration: 0.25s;
+}
+
+/*
+#scheduleFormTable {
+  @media (min-Width: )
+}
+*/
