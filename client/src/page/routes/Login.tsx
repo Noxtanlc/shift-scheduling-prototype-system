@@ -93,7 +93,7 @@ export default function Login() {
                                             <div className="mx-auto">
                                                 <Image src='./src/image/placeholder.png' fit="contain" w={200} />
                                             </div>
-                                            <div className="font-bold text-center text-md">Placeholder Application Title</div>
+                                            <div className="font-bold text-center text-md">(Placeholder Title)</div>
                                             <fieldset disabled={mutation.isSuccess}>
                                             <div className="font-bold">Login</div>
                                             <div className="flex flex-row justify-between gap-4">
