@@ -22,7 +22,7 @@ dayjs.tz.setDefault('Asia/Kuala_Lumpuer');
 
 const timezoneOffset = 8 * 60;
 
-const port = process.env.PORT || 3001; // Port
+const port = process.env.PORT || 3001; // Change the port value if occupied
 
 const config = {
     host: 'localhost', // Database hostname
