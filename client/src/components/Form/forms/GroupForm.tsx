@@ -13,11 +13,12 @@ export default function GroupForm({ ...props }) {
         originalSelectedStaff: [];
     }
     const queryClient = useQueryClient();
-    const staffList:any = useQuery({
-        ...getStaffList(), 
-        enabled: false,
-        initialData: queryClient.getQueryData(['staff'])
+    const staffList: any = useQuery({
+        ...getStaffList(),
+        enabled: true,
+        initialData: queryClient.getQueryData(['staff']),
     }).data;
+
 
     const action = props.action;
     const data = props.data;
@@ -126,7 +127,7 @@ export default function GroupForm({ ...props }) {
                 maxDropdownHeight={120}
                 {...form.getInputProps('selectedStaff')}
             />
-            <div className="flex flex-1 justify-end mt-3">
+            <div className="flex justify-end flex-1 mt-3">
                 <Button
                     type='submit'
                 >

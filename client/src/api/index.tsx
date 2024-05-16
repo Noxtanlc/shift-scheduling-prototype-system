@@ -7,7 +7,8 @@ export function getShiftCategory() {
       const response = await axios.get('/api/shift-category');
       const data = await response.data;
       return data;
-    }
+    },
+    staleTime: Infinity,
   });
 }
 
@@ -18,7 +19,8 @@ export function getShiftData() {
       const response = await axios.get('/api/shifts');
       const data = await response.data;
       return data;
-    }
+    },
+    staleTime: Infinity,
   });
 }
 
@@ -29,7 +31,8 @@ export function getStaffList() {
       const response = await axios.get("/api/staff");
       const data = await response.data;
       return data;
-    }
+    },
+    staleTime: Infinity,
   });
 }
 
@@ -40,7 +43,8 @@ export function getGroup() {
       const response = await axios.get("/api/group");
       const data = await response.data;
       return data;
-    }
+    },
+    staleTime: Infinity,
   });
 }
 
@@ -51,7 +55,8 @@ export function getAssignedStaff() {
       const response = await axios.get("/api/as_staff");
       const data = await response.data;
       return data;
-    }
+    },
+    staleTime: Infinity,
   });
 }
 
@@ -62,6 +67,7 @@ export function getLocationList() {
       const response = await axios.get("/api/location");
       const data = await response.data;
       return data;
-    }
+    },
+    staleTime: Infinity,
   });
 }

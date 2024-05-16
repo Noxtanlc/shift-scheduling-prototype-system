@@ -28,7 +28,7 @@ export default function ImportForm({ ...props }) {
     const staff = props.staff;
     const shiftCategory:any = useQuery({
         ...getShiftCategory(),
-        enabled: false,
+        enabled: true,
         initialData: queryClient.getQueryData(['shiftCategory']),
     }).data;
     const openDeleteModal = () =>
@@ -36,7 +36,7 @@ export default function ImportForm({ ...props }) {
             title: (<div className="font-bold">Import CSV</div>),
             centered: true,
             children: (
-                <div className="text-justify text-sm">
+                <div className="text-sm text-justify">
                     {"Are you sure you want to proceed? This action will replace all existing shifts in "}
                     <span className="font-bold">{date.format('MMMM')}</span>
                     {" "}
@@ -264,11 +264,11 @@ export default function ImportForm({ ...props }) {
                     />
                     <div className='flex flex-col mb-4'>
                         <div className="mb-2">
-                            <div className="mt-2 text-sm text-neutral-700 dark:text-neutral-400 font-bold ">
+                            <div className="mt-2 text-sm font-bold text-neutral-700 dark:text-neutral-400 ">
                                 Download Shift Template by Month and Year
                             </div>
                         </div>
-                        <div className='flex gap-2 justify-between'>
+                        <div className='flex justify-between gap-2'>
                             <div className="w-1/2 my-auto">
                                 <div className="text-sm">
                                     <div className="font-bold">Filename preview:</div>
@@ -293,7 +293,7 @@ export default function ImportForm({ ...props }) {
                         </div>
                     </div>
 
-                    <div className="rounded border border-zinc-600 border-opacity-30 text-justify dark:bg-neutral-700 bg-neutral-200 px-2 pb-4">
+                    <div className="px-2 pb-4 text-justify border rounded border-zinc-600 border-opacity-30 dark:bg-neutral-700 bg-neutral-200">
                         <div className="text-sm font-bold">
                             Additional Note:
                         </div>
@@ -305,7 +305,7 @@ export default function ImportForm({ ...props }) {
                             {" for reference."}
                         </div>
 
-                        <div className="flex flex-col text-sm mt-2 font-bold gap-2">
+                        <div className="flex flex-col gap-2 mt-2 text-sm font-bold">
                             {addNotes.notes.map((ele, index) => {
                                 return (
                                     <div className="flex" key={'addNote-' + index}>
@@ -322,7 +322,7 @@ export default function ImportForm({ ...props }) {
                     </div>
                 </div>
                 <Divider my={'sm'} />
-                <div className="flex flex-1 justify-end mt-3">
+                <div className="flex justify-end flex-1 mt-3">
                     <Tooltip
                         label='Select CSV template'
                         disabled={!form.isValid() ? false : true}
