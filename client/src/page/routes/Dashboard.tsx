@@ -9,19 +9,17 @@ import { scheduleData } from "@/hook/ScheduleData";
 import { DashboardTable } from "@/components/DataDisplay";
 import { useAuth } from "@/hook/AuthProvider";
 
-export const loader = (queryClient: QueryClient, staleTime?: number | undefined) => async () => {
+export const loader = (queryClient: QueryClient) => async () => {
     const shift =
         queryClient.getQueryData(getShiftData().queryKey) ??
         (await queryClient.fetchQuery({
             ...getShiftData(),
-            staleTime: staleTime,
         }));
 
     const staff =
         queryClient.getQueryData(getStaffList().queryKey) ??
         (await queryClient.fetchQuery({
             ...getStaffList(),
-            staleTime: staleTime,
         }));
 
     return { shift, staff };

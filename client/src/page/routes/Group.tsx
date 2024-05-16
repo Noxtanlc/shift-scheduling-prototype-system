@@ -18,22 +18,19 @@ export async function queryFunction() {
     return data;
 }
 
-export const loader = (queryClient: QueryClient, staleTime?: number | undefined) => async () => {
+export const loader = (queryClient: QueryClient) => async () => {
     const group = queryClient.getQueryData(['']) ?? (await queryClient.fetchQuery({
         ...getGroup(),
-        staleTime: staleTime
     })
     );
 
     const assigned_staff = queryClient.getQueryData(['assignedStaff']) ?? (await queryClient.fetchQuery({
         ...getAssignedStaff(),
-        staleTime: staleTime
     })
     );
 
     const staff = queryClient.getQueryData(['staff']) ?? (await queryClient.fetchQuery({
         ...getStaffList(),
-        staleTime: staleTime
     })
     );
 

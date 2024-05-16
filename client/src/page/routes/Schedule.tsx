@@ -19,47 +19,41 @@ import { QueryClient, useMutationState, useQuery, useQueryClient } from "@tansta
 import { notifications } from "@mantine/notifications";
 import { useAuth } from "../../hook/AuthProvider";
 
-export const loader = (queryClient: QueryClient, staleTime?: number | undefined) => async () => {
+export const loader = (queryClient: QueryClient) => async () => {
     const shift =
         queryClient.getQueryData(getShiftData().queryKey) ??
         (await queryClient.fetchQuery({
             ...getShiftData(),
-            staleTime: staleTime,
         }));
 
     const location =
         queryClient.getQueryData(getLocationList().queryKey) ??
         (await queryClient.fetchQuery({
             ...getLocationList(),
-            staleTime: staleTime,
         }));
 
     const group =
         queryClient.getQueryData(getGroup().queryKey) ??
         (await queryClient.fetchQuery({
             ...getGroup(),
-            staleTime: staleTime,
         }));
 
     const assigned_staff =
         queryClient.getQueryData(getAssignedStaff().queryKey) ??
         (await queryClient.fetchQuery({
             ...getAssignedStaff(),
-            staleTime: staleTime,
         }));
 
     const staff =
         queryClient.getQueryData(getStaffList().queryKey) ??
         (await queryClient.fetchQuery({
             ...getStaffList(),
-            staleTime: staleTime,
         }));
 
     const shiftCategory =
         queryClient.getQueryData(getShiftCategory().queryKey) ??
         (await queryClient.fetchQuery({
             ...getShiftCategory(),
-            staleTime: staleTime,
         }));
 
     return { shift, location, group, assigned_staff, staff, shiftCategory };

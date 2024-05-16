@@ -22,10 +22,9 @@ interface initial {
     action: string | undefined;
 }
 
-export const loader = (queryClient: QueryClient, staleTime?: number | undefined) => async () => {
+export const loader = (queryClient: QueryClient) => async () => {
     return queryClient.getQueryData(getLocationList().queryKey) ?? (await queryClient.fetchQuery({
         ...getLocationList(),
-        staleTime: staleTime,
     })
     );
 }
