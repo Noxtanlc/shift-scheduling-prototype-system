@@ -9,17 +9,21 @@ import {
   useMemo,
 } from "react";
 
-const AuthContext = createContext<any>(undefined);
+const AuthContext = createContext<any>('');
 
 export function useAuth() {
   return useContext(AuthContext!);
 };
 
 export default function AuthProvider({ children }: any) {
-  const [token, _setToken, removeToken] = useLocalStorage({
+  const [token, setToken, removeToken] = useLocalStorage({
     key: 'token',
-    defaultValue: localStorage.token,
+    defaultValue: {
+      accessToken: '',
+      refreshToken: '',
+    }
   });
+
   const [user, setUser, removeUser] = useLocalStorage({
     key: 'user',
     defaultValue: {
@@ -28,16 +32,13 @@ export default function AuthProvider({ children }: any) {
     }
   });
 
-  const setToken = (newToken: any) => {
-    _setToken(newToken);
-  };
-
   const refreshToken = async () => {
     try {
       const res = await axios.post('/api/refresh');
       setToken({
-        token: res.data.refreshtoken,
-      })
+        accessToken: res.data.accessToken,
+        refreshToken: res.data.refreshToken
+      });
       return res.data;
     }
     catch (err) {
@@ -46,37 +47,30 @@ export default function AuthProvider({ children }: any) {
   };
 
   useEffect(() => {
-    if (token) {
+    if (token.accessToken) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + token;
     } else {
       delete axios.defaults.headers.common["Authorization"];
       removeUser();
     }
-  }, [token, user]);
+  }, [token.accessToken]);
 
-  if (token) {
-    // refresh token
-    const decodedToken = jwtDecode(token);
-    axios.interceptors.request.use(async (config) => {
-      let currentDate = dayjs().unix();
-      if (decodedToken.exp! < currentDate) {
-        const data = await refreshToken();
-        config.headers["Authorization"] = "Bearer " + data.accessToken;
-        setToken(data.accessToken);
-        console.log('New Token - ' + data.accessToken);
-      }
-      return config;
-    }, (error) => { return Promise.reject(error) });
+  const axiosJWT = axios.create();
 
-    let timeouet = dayjs();
-    let tokenTime = dayjs.unix(decodedToken.exp!);
-
-    if (timeouet.diff(tokenTime, 'hour') === 12) {
-      delete axios.defaults.headers.common["Authorization"];
-      removeToken();
-      removeUser();
+  axiosJWT.interceptors.request.use(async (config) => {
+    const decodedToken = jwtDecode(token.accessToken);
+    let currentDate = dayjs().unix();
+    if (decodedToken.exp! < currentDate) {
+      const data = await refreshToken();
+      config.headers["Authorization"] = "Bearer " + data.accessToken;
     }
-  }
+    return config;
+  },
+    (error) => {
+      return Promise.reject(error)
+    }
+  );
+
 
   const contextValue: any = useMemo(() => (
     { token, setToken, removeToken, user, setUser, removeUser }

@@ -48,7 +48,7 @@ export default function Header({ ...props }) {
     return (
         <>
             <div className='w-full my-auto'>
-                {token ? (
+                {token.accessToken ? (
                     <>
                         <Burger
                             size="sm"
@@ -82,7 +82,7 @@ export default function Header({ ...props }) {
                         ToggleTheme();
                     }}
                 />
-                {token ? (
+                {token.accessToken ? (
                     <>
                         <div className='flex gap-3 my-auto font-bold'>
                             <div className="hidden my-auto sm:block" aria-label="user-name">{user.username !== '' ? user.username : <></>}</div>

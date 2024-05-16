@@ -4,7 +4,7 @@ import { useAuth } from "../hook/AuthProvider";
 import Loader from "@/common/loader";
 
 export default function Root() {
-  const { token } = useAuth();
+  const { token } = useAuth()!;
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -18,14 +18,10 @@ export default function Root() {
   }, []);
 
   useEffect(() => {
-    if (!token) {
-      navigate('/login', {replace: true});
+    if (!token.accessToken) {
+      navigate('/login', { replace: true });
     }
-  }, [token]);
-
-  if (!token) {
-    navigate('/', {replace: true});
-  }
+  }, [token.accessToken])
 
   return (
     loading ? (<Loader />) : (

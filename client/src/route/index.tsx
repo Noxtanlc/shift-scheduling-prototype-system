@@ -70,7 +70,7 @@ export default function Route() {
             loader: rootLoader,
             errorElement: <ErrorPage />,
             children: [
-                ...(!token ? authRoute : []),
+                ...(!token.accessToken ? authRoute : []),
                 {
                     path: '',
                     element: <DefaultLayout />,

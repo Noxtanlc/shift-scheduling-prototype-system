@@ -76,6 +76,7 @@ app.post("/api/login", async (req, res) => {
     if (user.length > 0) {
         const accessToken = generateAccessToken(user[0]);
         const refreshToken = generateRefreshToken(user[0]);
+        refreshTokens.push(refreshToken);
         res.send({
             name: user[0].name,
             isAdmin: user[0].isAdmin,
