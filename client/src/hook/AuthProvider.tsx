@@ -20,13 +20,13 @@ export default function AuthProvider({ children }: any) {
     key: 'token',
     defaultValue: localStorage.token,
   });
-  const [user, setUser, removeUser] = useLocalStorage({ 
+  const [user, setUser, removeUser] = useLocalStorage({
     key: 'user',
     defaultValue: {
       username: '',
       isAdmin: '',
     }
-   });
+  });
 
   const setToken = (newToken: any) => {
     _setToken(newToken);
@@ -62,13 +62,15 @@ export default function AuthProvider({ children }: any) {
       if (decodedToken.exp! < currentDate) {
         const data = await refreshToken();
         config.headers["Authorization"] = "Bearer " + data.accessToken;
+        setToken(data.accessToken);
+        console.log('New Token - ' + data.accessToken);
       }
       return config;
     }, (error) => { return Promise.reject(error) });
 
     let timeouet = dayjs();
     let tokenTime = dayjs.unix(decodedToken.exp!);
-    
+
     if (timeouet.diff(tokenTime, 'hour') === 12) {
       delete axios.defaults.headers.common["Authorization"];
       removeToken();

@@ -20,8 +20,6 @@ dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
 dayjs.tz.setDefault('Asia/Kuala_Lumpuer');
 
-const timezoneOffset = 8 * 60;
-
 const port = process.env.PORT || 3001; // Change the port value if occupied
 
 const config = {
@@ -58,7 +56,7 @@ const generateAccessToken = (user: any) => {
         id: user.id,
         isAdmin: user.account_type,
     }, "loginKey", {
-        expiresIn: "2hr",
+        expiresIn: "1hr",
     });
 }
 

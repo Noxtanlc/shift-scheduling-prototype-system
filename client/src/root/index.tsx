@@ -21,7 +21,11 @@ export default function Root() {
     if (!token) {
       navigate('/login', {replace: true});
     }
-  }, [token])
+  }, [token]);
+
+  if (!token) {
+    navigate('/', {replace: true});
+  }
 
   return (
     loading ? (<Loader />) : (
