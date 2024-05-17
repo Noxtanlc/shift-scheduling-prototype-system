@@ -5,37 +5,10 @@ import { Group } from "../../types";
 import { GroupTable } from "../../components/DataDisplay";
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from "@mantine/notifications";
-import axios from "axios";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import { useLoaderData } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BsPlusCircle } from "react-icons/bs";
 import { GroupForm } from "@/components/Form";
 import Modal from "@/components/Modal";
-
-export async function queryFunction() {
-    const response = await axios.get("http://127.0.0.1:3001/api/group");
-    const data = await response.data;
-    return data;
-}
-
-export const loader = (queryClient: QueryClient) => async () => {
-    const group = queryClient.getQueryData(['']) ?? (await queryClient.fetchQuery({
-        ...getGroup(),
-    })
-    );
-
-    const assigned_staff = queryClient.getQueryData(['assignedStaff']) ?? (await queryClient.fetchQuery({
-        ...getAssignedStaff(),
-    })
-    );
-
-    const staff = queryClient.getQueryData(['staff']) ?? (await queryClient.fetchQuery({
-        ...getStaffList(),
-    })
-    );
-
-    return { staff, group, assigned_staff };
-}
 
 function reducer(_state: any, props: any) {
     switch (props.action) {
@@ -83,9 +56,29 @@ function organiseData(groupArr: [], asArr: []) {
 }
 
 export default function GroupPage() {
-    const { group, assigned_staff, staff } = useLoaderData() as Awaited<
-        ReturnType<ReturnType<typeof loader>>
-    >;
+    const queryClient = useQueryClient();
+    const groupQuery = useQuery({
+        ...getGroup(),
+        initialData: queryClient.getQueryData(['group']),
+        enabled: false,
+    });
+
+    const assigned_staffQuery = useQuery({
+        ...getAssignedStaff(),
+        initialData: queryClient.getQueryData(['assignedStaff']),
+        enabled: false,
+    });
+
+    const staffQuery = useQuery({
+        ...getStaffList(),
+        initialData: queryClient.getQueryData(['staff']),
+        enabled: false,
+    });
+
+    const group = groupQuery.data as [];
+    const a_staff = assigned_staffQuery.data as [];
+    const staff = staffQuery.data as [];
+
     const ModalInitialState: {
         action: string | undefined,
         title: string | undefined,
@@ -95,8 +88,6 @@ export default function GroupPage() {
         data: [],
         title: undefined,
     }
-
-    const queryClient = useQueryClient();
 
     const [state, dispatch] = useReducer(reducer, ModalInitialState);
     const InitialNotification = {
@@ -112,7 +103,7 @@ export default function GroupPage() {
             }
         }
     });
-    const [GroupArray, setGroupArray] = useState<Group[]>(organiseData(group, assigned_staff));
+    const [GroupArray, setGroupArray] = useState<Group[]>(organiseData(group, a_staff));
 
     function handleModalClick(action: any, title: string | undefined, data?: any) {
         dispatch({

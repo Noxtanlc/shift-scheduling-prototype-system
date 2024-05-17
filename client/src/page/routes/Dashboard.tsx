@@ -3,29 +3,36 @@ import { useMemo, useState } from "react";
 import MonthPicker from "@/components/Datepicker/CustomMonthPicker";
 import { Button, Tooltip } from "@mantine/core";
 import { Link, useLoaderData } from "react-router-dom";
-import { getShiftData, getStaffList } from "@/api";
-import { QueryClient } from "@tanstack/react-query";
+import { getAssignedStaff, getGroup, getLocationList, getShiftCategory, getShiftData, getStaffList } from "@/api";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { scheduleData } from "@/misc/ScheduleData";
 import { DashboardTable } from "@/components/DataDisplay";
 import { useAuth } from "@/misc/AuthProvider";
 
 export const loader = (queryClient: QueryClient) => async () => {
     const shift =
-        queryClient.getQueryData(getShiftData().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getShiftData(),
-        }));
+        queryClient.getQueryData(getShiftData().queryKey) ?? (await queryClient.fetchQuery(getShiftData()));
+
+    const location =
+        queryClient.getQueryData(getLocationList().queryKey) ?? (await queryClient.fetchQuery(getLocationList()));
+
+    const group =
+        queryClient.getQueryData(getGroup().queryKey) ?? (await queryClient.fetchQuery(getGroup()));
+
+    const assigned_staff =
+        queryClient.getQueryData(getAssignedStaff().queryKey) ?? (await queryClient.fetchQuery(getAssignedStaff()));
 
     const staff =
-        queryClient.getQueryData(getStaffList().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getStaffList(),
-        }));
+        queryClient.getQueryData(getStaffList().queryKey) ?? (await queryClient.fetchQuery(getStaffList()));
 
-    return { shift, staff };
+    const shiftCategory =
+        queryClient.getQueryData(getShiftCategory().queryKey) ?? (await queryClient.fetchQuery(getShiftCategory()));
+
+    return { shift, location, group, assigned_staff, staff, shiftCategory };
 };
 
 export default function Dashboard() {
+    const queryClient = useQueryClient();
     const date = new Date();
     const [pickerValue, setPickerValue] = useState<Date | null>(
         new Date(date.getFullYear(), date.getMonth(), 1)

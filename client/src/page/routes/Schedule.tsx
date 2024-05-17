@@ -6,7 +6,6 @@ import { useState, useReducer, useEffect, useMemo } from "react";
 import {
     getAssignedStaff,
     getGroup,
-    getLocationList,
     getShiftData,
     getShiftCategory,
     getStaffList,
@@ -15,49 +14,9 @@ import { ScheduleTable } from "@/components/DataDisplay/";
 import { scheduleData } from "@/misc/ScheduleData";
 import Modal from "@/components/Modal";
 import { ImportForm } from "@/components/Form";
-import { QueryClient, useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useAuth } from "../../misc/AuthProvider";
-
-export const loader = (queryClient: QueryClient) => async () => {
-    const shift =
-        queryClient.getQueryData(getShiftData().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getShiftData(),
-        }));
-
-    const location =
-        queryClient.getQueryData(getLocationList().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getLocationList(),
-        }));
-
-    const group =
-        queryClient.getQueryData(getGroup().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getGroup(),
-        }));
-
-    const assigned_staff =
-        queryClient.getQueryData(getAssignedStaff().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getAssignedStaff(),
-        }));
-
-    const staff =
-        queryClient.getQueryData(getStaffList().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getStaffList(),
-        }));
-
-    const shiftCategory =
-        queryClient.getQueryData(getShiftCategory().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getShiftCategory(),
-        }));
-
-    return { shift, location, group, assigned_staff, staff, shiftCategory };
-};
 
 interface initial {
     title: string | undefined;
