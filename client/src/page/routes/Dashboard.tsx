@@ -1,28 +1,13 @@
 import * as Icon from "react-bootstrap-icons";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MonthPicker from "@/components/Datepicker/CustomMonthPicker";
 import { Button, Tooltip } from "@mantine/core";
 import { Link, useLoaderData } from "react-router-dom";
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { getAssignedStaff, getGroup, getLocationList, getShiftCategory, getShiftData, getStaffList } from "@/api";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
-=======
 import { getShiftData, getStaffList } from "@/api";
 import { QueryClient } from "@tanstack/react-query";
-<<<<<<< HEAD
->>>>>>> parent of d1ad547 (Changes)
 import { scheduleData } from "@/misc/ScheduleData";
-=======
-import { getShiftData, getStaffList } from "@/api";
-import { QueryClient } from "@tanstack/react-query";
-import { scheduleData } from "@/hook/ScheduleData";
->>>>>>> parent of 4c947ad (Update)
-=======
-import { scheduleData } from "@/hook/ScheduleData";
->>>>>>> parent of 4c947ad (Update)
 import { DashboardTable } from "@/components/DataDisplay";
-import { useAuth } from "@/hook/AuthProvider";
+import { useAuth } from "@/misc/AuthProvider";
 
 export const loader = (queryClient: QueryClient) => async () => {
     const shift =
@@ -41,6 +26,8 @@ export const loader = (queryClient: QueryClient) => async () => {
 };
 
 export default function Dashboard() {
+    const [data, setData] = useState<any>([]);
+
     const date = new Date();
     const [pickerValue, setPickerValue] = useState<Date | null>(
         new Date(date.getFullYear(), date.getMonth(), 1)
@@ -61,7 +48,9 @@ export default function Dashboard() {
         ReturnType<ReturnType<typeof loader>>
     >;
 
-    const data = scheduleData(dateValue, staff, shift);
+    useEffect(() => {
+        setData(scheduleData(dateValue, staff, shift))
+    }, [shift, staff]);
 
     const { user } = useAuth()!;
 

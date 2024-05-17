@@ -3,12 +3,12 @@ import { Avatar, Burger, Menu, Switch } from "@mantine/core";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
-import { useAuth } from "@/hook/AuthProvider";
+import { useAuth } from "@/misc/AuthProvider";
 import { TbCheck, TbChevronDown } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { notifications } from "@mantine/notifications";
-import { useTheme } from "@/hook/ThemeProvider";
+import { useTheme } from "@/misc/ThemeProvider";
 
 export default function Header({ ...props }) {
     const { token, setToken, removeToken, user, removeUser } = useAuth();

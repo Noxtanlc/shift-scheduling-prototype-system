@@ -5,8 +5,8 @@ import { ScheduleLoader, LocationLoader, GroupLoader, ShiftCategoryLoader, Dashb
 import {Title} from '@/page';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useAuth } from '@/hook/AuthProvider';
-import ThemeProvider from '@/hook/ThemeProvider';
+import { useAuth } from '@/misc/AuthProvider';
+import ThemeProvider from '@/misc/ThemeProvider';
 import Root from '@/root';
 import DefaultLayout from '@/layout';
 
