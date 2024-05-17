@@ -5,9 +5,9 @@ import { Button, Tooltip } from "@mantine/core";
 import { Link, useLoaderData } from "react-router-dom";
 import { getShiftData, getStaffList } from "@/api";
 import { QueryClient } from "@tanstack/react-query";
-import { scheduleData } from "@/hook/ScheduleData";
+import { scheduleData } from "@/misc/ScheduleData";
 import { DashboardTable } from "@/components/DataDisplay";
-import { useAuth } from "@/hook/AuthProvider";
+import { useAuth } from "@/misc/AuthProvider";
 
 export const loader = (queryClient: QueryClient) => async () => {
     const shift =

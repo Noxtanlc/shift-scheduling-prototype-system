@@ -1,5 +1,5 @@
 import './App.css';
-import AuthProvider from './hook/AuthProvider';
+import AuthProvider from './misc/AuthProvider';
 import Route from './route';
 
 export default function App() {

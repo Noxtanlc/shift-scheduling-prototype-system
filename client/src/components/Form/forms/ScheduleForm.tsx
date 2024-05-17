@@ -3,7 +3,7 @@ import { DateInput, DateInputProps } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { scheduleData } from "@/hook/ScheduleData";
+import { scheduleData } from "@/misc/ScheduleData";
 import { shiftList } from "@/types";
 import { useLoaderData } from "react-router-dom";
 

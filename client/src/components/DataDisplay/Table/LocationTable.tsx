@@ -1,4 +1,4 @@
-import { useTheme } from "@/hook/ThemeProvider";
+import { useTheme } from "@/misc/ThemeProvider";
 import { Button, Loader } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useQueryClient, useMutation } from "@tanstack/react-query";

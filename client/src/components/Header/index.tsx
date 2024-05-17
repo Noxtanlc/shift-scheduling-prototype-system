@@ -3,15 +3,17 @@ import { Avatar, Burger, Menu, Switch } from "@mantine/core";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
-import { useAuth } from "@/hook/AuthProvider";
+import { useAuth } from "@/misc/AuthProvider";
 import { TbCheck, TbChevronDown } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { notifications } from "@mantine/notifications";
-import { useTheme } from "@/hook/ThemeProvider";
+import { useTheme } from "@/misc/ThemeProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header({ ...props }) {
-    const { token, setToken, removeToken, user, removeUser } = useAuth();
+    const queryClient = useQueryClient();
+    const { token, removeToken, user, removeUser } = useAuth();
     const navigate = useNavigate();
     const { theme, ToggleTheme } = useTheme()!;
     const [topOpened, topHandler] = useDisclosure();
@@ -29,6 +31,7 @@ export default function Header({ ...props }) {
             await axios.post('/api/logout', {
                 token: token.accessToken,
             }).then(() => {
+                queryClient.clear();
                 notifications.show({
                     id: 'login',
                     withCloseButton: true,

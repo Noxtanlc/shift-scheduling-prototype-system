@@ -16,6 +16,7 @@ export function useAuth() {
 };
 
 export default function AuthProvider({ children }: any) {
+
   const [token, setToken, removeToken] = useLocalStorage({
     key: 'token',
     defaultValue: {

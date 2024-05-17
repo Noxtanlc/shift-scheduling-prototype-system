@@ -5,7 +5,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import * as icon from "react-icons/bs";
-import { useTheme } from "@/hook/ThemeProvider";
+import { useTheme } from "@/misc/ThemeProvider";
 
 export default function GroupTable({ ...props }) {
     const queryClient = useQueryClient();
