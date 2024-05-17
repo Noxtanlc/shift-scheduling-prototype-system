@@ -83,7 +83,8 @@ app.post("/api/login", async (req, res) => {
             isAdmin: user[0].isAdmin,
             accessToken,
             refreshToken,
-        })
+        });
+        refreshTokens.push(refreshToken);
     } else {
         res.status(401).send({
             response: "Username or password incorrect!"

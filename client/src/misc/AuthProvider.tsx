@@ -35,9 +35,7 @@ export default function AuthProvider({ children }: any) {
   const refreshToken = async () => {
     try {
       const res = await axios.post('/api/refresh');
-      setToken({
-        token: res.data.refreshtoken,
-      })
+      setToken(res.data.refreshtoken,)
       return res.data;
     }
     catch (err) {

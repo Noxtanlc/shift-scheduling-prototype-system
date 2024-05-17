@@ -11,7 +11,7 @@ import { notifications } from "@mantine/notifications";
 import { useTheme } from "@/misc/ThemeProvider";
 
 export default function Header({ ...props }) {
-    const { token, setToken, removeToken, user, removeUser } = useAuth();
+    const { token, removeToken, user, removeUser } = useAuth();
     const navigate = useNavigate();
     const { theme, ToggleTheme } = useTheme()!;
     const [topOpened, topHandler] = useDisclosure();
@@ -25,24 +25,28 @@ export default function Header({ ...props }) {
     }, [pathname]);
 
     const handleLogout = async () => {
-        await axios.post('/api/logout').catch((err) => console.log(err));
-        notifications.show({
-            id: 'login',
-            withCloseButton: true,
-            autoClose: 1500,
-            title: "Logging out",
-            message: 'Logging out of application...',
-            color: 'cyan',
-            icon: <TbCheck />,
-            className: 'login-class',
-        });
-
-        setTimeout(() => {
-            setToken('');
-            removeToken();
-            removeUser();
-            navigate('/', { replace: true });
-        }, 3 * 1000);
+        await axios.post('/api/logout', {
+            token: token
+        })
+        .then(() => {
+            notifications.show({
+                id: 'logout',
+                withCloseButton: true,
+                autoClose: 1500,
+                title: "Logging out",
+                message: 'Logging out of application...',
+                color: 'cyan',
+                icon: <TbCheck />,
+                className: 'logout-class',
+            });
+    
+            setTimeout(() => {
+                removeToken();
+                removeUser();
+                navigate('/', { replace: true });
+            }, 3 * 1000);
+        })
+        .catch((err) => console.log(err));
     };
 
     return (
