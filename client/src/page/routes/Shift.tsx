@@ -18,9 +18,10 @@ interface initial {
     action: string | undefined;
 }
 
-export const loader = (queryClient: QueryClient) => async () => {
+export const loader = (queryClient: QueryClient, staleTime?: number | undefined) => async () => {
     return queryClient.getQueryData(getShiftCategory().queryKey) ?? (await queryClient.fetchQuery({
         ...getShiftCategory(),
+        staleTime: staleTime
     })
     );
 }

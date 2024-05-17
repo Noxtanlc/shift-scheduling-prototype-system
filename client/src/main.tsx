@@ -12,11 +12,11 @@ axios.defaults.baseURL = 'http://127.0.0.1:3001'; // Server URL for API call
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-      <MantineProvider defaultColorScheme="auto">
-        <Notifications />
-        <ModalsProvider>
-          <App />
-        </ModalsProvider>
-      </MantineProvider>
+    <MantineProvider defaultColorScheme="auto">
+      <Notifications />
+      <ModalsProvider>
+        <App />
+      </ModalsProvider>
+    </MantineProvider>
   </React.StrictMode>
 );

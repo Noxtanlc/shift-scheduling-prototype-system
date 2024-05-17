@@ -9,21 +9,17 @@ import {
   useMemo,
 } from "react";
 
-const AuthContext = createContext<any>('');
+const AuthContext = createContext<any>(undefined);
 
 export function useAuth() {
   return useContext(AuthContext!);
 };
 
 export default function AuthProvider({ children }: any) {
-  const [token, setToken, removeToken] = useLocalStorage({
+  const [token, _setToken, removeToken] = useLocalStorage({
     key: 'token',
-    defaultValue: {
-      accessToken: '',
-      refreshToken: '',
-    }
+    defaultValue: localStorage.token,
   });
-
   const [user, setUser, removeUser] = useLocalStorage({
     key: 'user',
     defaultValue: {
@@ -32,13 +28,16 @@ export default function AuthProvider({ children }: any) {
     }
   });
 
+  const setToken = (newToken: any) => {
+    _setToken(newToken);
+  };
+
   const refreshToken = async () => {
     try {
       const res = await axios.post('/api/refresh');
       setToken({
-        accessToken: res.data.accessToken,
-        refreshToken: res.data.refreshToken
-      });
+        token: res.data.refreshtoken,
+      })
       return res.data;
     }
     catch (err) {
@@ -47,37 +46,32 @@ export default function AuthProvider({ children }: any) {
   };
 
   useEffect(() => {
-    if (token.accessToken) {
-      axios.defaults.headers.common["Authorization"] = "Bearer " + token.accessToken;
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = "Bearer " + token;
     } else {
       delete axios.defaults.headers.common["Authorization"];
       removeToken();
       removeUser();
     }
-  }, [token.accessToken]);
+  }, [token, user]);
 
   const axiosJWT = axios.create();
 
   axiosJWT.interceptors.request.use(async (config) => {
-    const decodedToken = jwtDecode(token.accessToken);
+    const decodedToken = jwtDecode(token);
     let currentDate = dayjs().unix();
     if (decodedToken.exp! < currentDate) {
       const data = await refreshToken();
       config.headers["Authorization"] = "Bearer " + data.accessToken;
     }
     return config;
-  },
-    (error) => {
-      return Promise.reject(error)
-    }
-  );
+  }, (error) => { return Promise.reject(error) });
 
+const contextValue: any = useMemo(() => (
+  { token, setToken, removeToken, user, setUser, removeUser }
+), [token, user]);
 
-  const contextValue: any = useMemo(() => (
-    { token, setToken, removeToken, user, setUser, removeUser }
-  ), [token, user]);
-
-  return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  )
+return (
+  <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+)
 }
