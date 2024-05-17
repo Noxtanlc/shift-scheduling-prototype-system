@@ -11,12 +11,12 @@ import {
     getStaffList,
 } from "@/api";
 import { ScheduleTable } from "@/components/DataDisplay/";
-import { scheduleData } from "@/misc/ScheduleData";
+import { scheduleData } from "@/hook/ScheduleData";
 import Modal from "@/components/Modal";
 import { ImportForm } from "@/components/Form";
 import { useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
-import { useAuth } from "../../misc/AuthProvider";
+import { useAuth } from "../../hook/AuthProvider";
 
 interface initial {
     title: string | undefined;

@@ -3,11 +3,17 @@ import { useMemo, useState } from "react";
 import MonthPicker from "@/components/Datepicker/CustomMonthPicker";
 import { Button, Tooltip } from "@mantine/core";
 import { Link, useLoaderData } from "react-router-dom";
+<<<<<<< HEAD
 import { getAssignedStaff, getGroup, getLocationList, getShiftCategory, getShiftData, getStaffList } from "@/api";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { scheduleData } from "@/misc/ScheduleData";
+=======
+import { getShiftData, getStaffList } from "@/api";
+import { QueryClient } from "@tanstack/react-query";
+import { scheduleData } from "@/hook/ScheduleData";
+>>>>>>> parent of 4c947ad (Update)
 import { DashboardTable } from "@/components/DataDisplay";
-import { useAuth } from "@/misc/AuthProvider";
+import { useAuth } from "@/hook/AuthProvider";
 
 export const loader = (queryClient: QueryClient) => async () => {
     const shift =
