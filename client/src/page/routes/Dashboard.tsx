@@ -10,11 +10,15 @@ import { QueryClient, useQueryClient } from "@tanstack/react-query";
 =======
 import { getShiftData, getStaffList } from "@/api";
 import { QueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 >>>>>>> parent of d1ad547 (Changes)
 import { scheduleData } from "@/misc/ScheduleData";
 =======
 import { getShiftData, getStaffList } from "@/api";
 import { QueryClient } from "@tanstack/react-query";
+import { scheduleData } from "@/hook/ScheduleData";
+>>>>>>> parent of 4c947ad (Update)
+=======
 import { scheduleData } from "@/hook/ScheduleData";
 >>>>>>> parent of 4c947ad (Update)
 import { DashboardTable } from "@/components/DataDisplay";
