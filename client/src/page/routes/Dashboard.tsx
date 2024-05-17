@@ -4,8 +4,13 @@ import MonthPicker from "@/components/Datepicker/CustomMonthPicker";
 import { Button, Tooltip } from "@mantine/core";
 import { Link, useLoaderData } from "react-router-dom";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getAssignedStaff, getGroup, getLocationList, getShiftCategory, getShiftData, getStaffList } from "@/api";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
+=======
+import { getShiftData, getStaffList } from "@/api";
+import { QueryClient } from "@tanstack/react-query";
+>>>>>>> parent of d1ad547 (Changes)
 import { scheduleData } from "@/misc/ScheduleData";
 =======
 import { getShiftData, getStaffList } from "@/api";
@@ -17,28 +22,21 @@ import { useAuth } from "@/hook/AuthProvider";
 
 export const loader = (queryClient: QueryClient) => async () => {
     const shift =
-        queryClient.getQueryData(getShiftData().queryKey) ?? (await queryClient.fetchQuery(getShiftData()));
-
-    const location =
-        queryClient.getQueryData(getLocationList().queryKey) ?? (await queryClient.fetchQuery(getLocationList()));
-
-    const group =
-        queryClient.getQueryData(getGroup().queryKey) ?? (await queryClient.fetchQuery(getGroup()));
-
-    const assigned_staff =
-        queryClient.getQueryData(getAssignedStaff().queryKey) ?? (await queryClient.fetchQuery(getAssignedStaff()));
+        queryClient.getQueryData(getShiftData().queryKey) ??
+        (await queryClient.fetchQuery({
+            ...getShiftData(),
+        }));
 
     const staff =
-        queryClient.getQueryData(getStaffList().queryKey) ?? (await queryClient.fetchQuery(getStaffList()));
+        queryClient.getQueryData(getStaffList().queryKey) ??
+        (await queryClient.fetchQuery({
+            ...getStaffList(),
+        }));
 
-    const shiftCategory =
-        queryClient.getQueryData(getShiftCategory().queryKey) ?? (await queryClient.fetchQuery(getShiftCategory()));
-
-    return { shift, location, group, assigned_staff, staff, shiftCategory };
+    return { shift, staff };
 };
 
 export default function Dashboard() {
-    const queryClient = useQueryClient();
     const date = new Date();
     const [pickerValue, setPickerValue] = useState<Date | null>(
         new Date(date.getFullYear(), date.getMonth(), 1)

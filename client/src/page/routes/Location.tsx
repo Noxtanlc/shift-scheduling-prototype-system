@@ -7,7 +7,8 @@ import { notifications } from "@mantine/notifications";
 import { getLocationList } from "../../api";
 import { LocationForm } from "@/components/Form";
 import Modal from "@/components/Modal";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useLoaderData } from "react-router-dom";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 interface InitialNotification {
     action: string,
@@ -21,6 +22,12 @@ interface initial {
     action: string | undefined;
 }
 
+export const loader = (queryClient: QueryClient) => async () => {
+    return queryClient.getQueryData(getLocationList().queryKey) ?? (await queryClient.fetchQuery({
+        ...getLocationList(),
+    })
+    );
+}
 
 function reducer(_state: any, props: any) {
     switch (props.action) {
@@ -48,13 +55,10 @@ const initialState: initial = {
 }
 
 export default function Location() {
+    const location = useLoaderData() as Awaited<
+        ReturnType<ReturnType<typeof loader>>
+    >
     const queryClient = useQueryClient();
-    const location = useQuery({
-        ...getLocationList(),
-        initialData: queryClient.getQueryData(['location']),
-        enabled: true,
-    });
-
     const InitialNotification: any = {
         action: '',
         title: '',
@@ -70,7 +74,7 @@ export default function Location() {
         }
     });
     const [update, setUpdate] = useState(false);
-    const [data, setData] = useState(location.data);
+    const [data, setData] = useState(location);
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const modalHandler = (action: any, title?: string | undefined, data?: any) => {

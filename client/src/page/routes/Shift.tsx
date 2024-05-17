@@ -5,7 +5,8 @@ import * as Icon from 'react-bootstrap-icons';
 import { notifications } from "@mantine/notifications";
 import { getShiftCategory } from "@/api";
 import { ShiftCategoryTable } from "@/components/DataDisplay";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useLoaderData } from "react-router-dom";
 import Modal from "@/components/Modal";
 import { ShiftCategoryForm } from "@/components/Form";
 import { CSVLink } from "react-csv";
@@ -15,6 +16,13 @@ interface initial {
     title: string | undefined;
     data: [] | undefined;
     action: string | undefined;
+}
+
+export const loader = (queryClient: QueryClient) => async () => {
+    return queryClient.getQueryData(getShiftCategory().queryKey) ?? (await queryClient.fetchQuery({
+        ...getShiftCategory(),
+    })
+    );
 }
 
 function reducer(_state: any, props: any) {
@@ -44,15 +52,9 @@ const initialState: initial = {
 
 export default function ShiftType() {
     const queryClient = useQueryClient();
-
-    const shift_cat = useQuery({
-        ...getShiftCategory(),
-        initialData: queryClient.getQueryData(['shiftCategory']),
-        enabled: false,
-    })
-
-    const data = shift_cat.data as any;
-
+    const data = useLoaderData() as Awaited<
+        ReturnType<ReturnType<typeof loader>>
+    >;
     const InitialNotification: any = {
         action: '',
         title: '',
