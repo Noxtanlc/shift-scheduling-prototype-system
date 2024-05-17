@@ -3,7 +3,7 @@ import { Button, Input, PasswordInput, Image } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "../../misc/AuthProvider";
+import { useAuth } from "../../hook/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { notifications } from "@mantine/notifications";

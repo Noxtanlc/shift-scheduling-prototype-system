@@ -5,8 +5,8 @@ import * as tabIcon from "react-icons/tb";
 import { ActionIcon, Loader } from "@mantine/core";
 import { TableColumn } from "react-data-table-component/dist/DataTable/types";
 import { ScheduleForm } from "@/components/Form";
-import { useAuth } from "@/misc/AuthProvider";
-import { useTheme } from "@/misc/ThemeProvider";
+import { useAuth } from "@/hook/AuthProvider";
+import { useTheme } from "@/hook/ThemeProvider";
 
 export default function ScheduleTable({ ...props }) {
     const { user } = useAuth();

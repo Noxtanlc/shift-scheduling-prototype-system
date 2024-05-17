@@ -1,5 +1,5 @@
 import Loader from "@/common/loader";
-import { useTheme } from "@/misc/ThemeProvider";
+import { useTheme } from "@/hook/ThemeProvider";
 import { Button } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { modals } from "@mantine/modals";

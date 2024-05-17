@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, Outlet, Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../misc/AuthProvider";
+import { useAuth } from "../hook/AuthProvider";
 import Loader from "@/common/loader";
 
 export default function Root() {
