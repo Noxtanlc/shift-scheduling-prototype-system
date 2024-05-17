@@ -19,7 +19,7 @@ export default function Root() {
 
   useEffect(() => {
     if (!token.accessToken) {
-      navigate('/login');
+      navigate('/login', {replace: true});
     }
   }, [token.accessToken])
 
