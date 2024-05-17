@@ -3,7 +3,7 @@ import Loader from "@/common/loader";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { nameFilter } from "../filters";
-import { useTheme } from "@/hook/ThemeProvider";
+import { useTheme } from "@/misc/ThemeProvider";
 
 export default function DashboardTable({ ...props }) {
     const dateValue = props.dateValue;

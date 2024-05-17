@@ -12,12 +12,12 @@ import {
     getStaffList,
 } from "@/api";
 import { ScheduleTable } from "@/components/DataDisplay/";
-import { scheduleData } from "@/hook/ScheduleData";
+import { scheduleData } from "@/misc/ScheduleData";
 import Modal from "@/components/Modal";
 import { ImportForm } from "@/components/Form";
 import { QueryClient, useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
-import { useAuth } from "../../hook/AuthProvider";
+import { useAuth } from "../../misc/AuthProvider";
 
 export const loader = (queryClient: QueryClient) => async () => {
     const shift =

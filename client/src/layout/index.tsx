@@ -8,7 +8,7 @@ import {
   MdOutlineLocationCity,
   MdPersonOutline,
 } from "react-icons/md";
-import { useAuth } from "@/hook/AuthProvider";
+import { useAuth } from "@/misc/AuthProvider";
 import { Outlet } from "react-router-dom";
 
 const slideRight = {
