@@ -131,7 +131,7 @@ const verify = (req: any, res: any, next: any) => {
     }
 };
 
-app.post("/api/logout", verify, (req, res) => {
+app.post("/api/logout", (req, res) => {
     const refreshToken = req.body.token;
     refreshTokens = refreshTokens.filter((token: any) => token !== refreshToken);
     res.status(200).json("You logged out successfully.");
@@ -147,7 +147,7 @@ app.get("/api/shifts/", async (req, res) => {
         .catch(err => console.log(err));
 });
 
-app.post("/api/shifts/staff/:id", async (req, res) => {
+app.post("/api/shifts/staff/:id", verify, async (req, res) => {
     const data = req.body.data;
     const action = req.body.action;
     const staff_id = req.params.id;
@@ -285,7 +285,7 @@ app.post("/api/shifts/staff/:id", async (req, res) => {
 
 });
 
-app.post("/api/shifts/import", async (req, res) => {
+app.post("/api/shifts/import", verify, async (req, res) => {
     const data = req.body.data;
     const month = req.body.month;
     const year = req.body.year;
@@ -339,11 +339,11 @@ app.get("/api/staff/", async (req, res) => {
         .catch(err => console.log(err));
 });
 
-app.get("/api/as_staff/", (req, res) => {
+app.get("/api/as_staff/", async (req, res) => {
     const query = "SELECT CONCAT(`slist`.first_name, ' ', `slist`.last_name) AS name, " +
         "`a_staff`.as_id as ID, `a_staff`.as_FKstaffID as staffID, `a_staff`.as_FKgroupID as groupID  FROM `shift-scheduler`.assigned_staff as `a_staff` " +
         "INNER JOIN `staff_list` as `slist` ON `slist`.staff_id = `a_staff`.as_FKstaffID";
-    db.query(query).then((result) => { return res.send(result[0]) })
+    await db.query(query).then((result) => { return res.send(result[0]) })
         .catch(err => console.log(err));
 });
 
@@ -356,7 +356,7 @@ app.get("/api/group/", async (req, res) => {
         .catch(err => console.log(err));
 });
 
-app.post("/api/group/:id", async (req, res) => {
+app.post("/api/group/:id", verify, async (req, res) => {
     const action = req.body.action;
     const id = req.params.id;
     const data = req.body.data;
@@ -506,7 +506,7 @@ app.get("/api/location", async (_req, res) => {
         });
 })
 
-app.post("/api/location/:id", async (req, res) => {
+app.post("/api/location/:id", verify, async (req, res) => {
     const action = req.body.action;
     const data = req.body.data;
     const id = req.params.id;
@@ -603,7 +603,7 @@ app.get("/api/shift-category", async (req, res) => {
         .catch(err => console.log(err));
 });
 
-app.post("/api/shift-category/:id", async (req, res) => {
+app.post("/api/shift-category/:id", verify, async (req, res) => {
     const data = req.body.data;
     const id = req.params.id;
     const action = req.body.action;
@@ -699,7 +699,4 @@ app.post("/api/shift-category/:id", async (req, res) => {
         }
     }
 });
-function aysnc() {
-    throw new Error("Function not implemented.");
-}
 

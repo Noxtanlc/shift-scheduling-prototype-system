@@ -6,10 +6,9 @@ dayjs.extend(customParseFormat);
 
 export function scheduleData(dateValue: any, staffData: any, shiftData: any) {
     const staff: shiftList[] = [];
-
     const shift = shiftData.filter((ele: any) => {
         const start_date: [year: number, month: number] = ele.start_date.split('-');
-        const end_date: [year: any, month: any] = ele.end_date.split('-');
+        const end_date: [year: number, month: number] = ele.end_date.split('-');
 
         return (
             (dateValue.month === +(start_date[1])) && (dateValue.year === +(start_date[0]))
@@ -144,5 +143,6 @@ export function scheduleData(dateValue: any, staffData: any, shiftData: any) {
             }
         }
     });
+
     return staff;
 }
