@@ -25,24 +25,29 @@ export default function Header({ ...props }) {
     }, [pathname]);
 
     const handleLogout = async () => {
-        await axios.post('/api/logout').catch((err) => console.log(err));
-        notifications.show({
-            id: 'login',
-            withCloseButton: true,
-            autoClose: 1500,
-            title: "Logging out",
-            message: 'Logging out of application...',
-            color: 'cyan',
-            icon: <TbCheck />,
-            className: 'login-class',
-        });
+        if (token.accessToken) {
+            await axios.post('/api/logout', {
+                token: token.accessToken,
+            }).then(() => {
+                notifications.show({
+                    id: 'login',
+                    withCloseButton: true,
+                    autoClose: 1500,
+                    title: "Logging out",
+                    message: 'Logging out of application...',
+                    color: 'orange',
+                    icon: <TbCheck />,
+                    className: 'logout-class',
+                });
 
-        setTimeout(() => {
-            setToken('');
-            removeToken();
-            removeUser();
-            navigate('/', { replace: true });
-        }, 3 * 1000);
+                setTimeout(() => {
+                    removeToken();
+                    removeUser();
+                    navigate('/', { replace: true });
+                }, 3 * 1000);
+            })
+                .catch((err) => console.log(err));
+        }
     };
 
     return (
@@ -74,7 +79,7 @@ export default function Header({ ...props }) {
                 ) : (<></>)}
             </div>
             <div className="flex flex-row justify-end w-full gap-2 sm:gap-4">
-                <Switch className="my-auto" size="md" color="dark.4" 
+                <Switch className="my-auto" size="md" color="dark.4"
                     defaultChecked={theme ? true : false}
                     onLabel={<MdDarkMode size={16} />}
                     offLabel={<MdLightMode size={16} />}

@@ -48,7 +48,7 @@ export default function Dashboard() {
 
     const data = scheduleData(dateValue, staff, shift);
 
-    const { isAdmin } = useAuth();
+    const { user } = useAuth()!;
 
     return (
         <div key="dashboard" className="flex flex-col flex-1 p-2">
@@ -91,7 +91,7 @@ export default function Dashboard() {
                             </div>
                         </Button>
                     </Tooltip>
-                    {isAdmin === 0 ? (
+                    {user.isAdmin === 0 ? (
                         <></>
                     ) : (
                         <>
