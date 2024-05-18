@@ -1,3 +1,4 @@
+import { useAuth } from "@/misc/AuthProvider";
 import { useTheme } from "@/misc/ThemeProvider";
 import { Button, Loader } from "@mantine/core";
 import { modals } from "@mantine/modals";
@@ -7,6 +8,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import * as icon from "react-icons/bs"
 
 export default function LocationTable({ ...props }) {
+    const { token } = useAuth();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["locationForm"],
@@ -14,6 +16,10 @@ export default function LocationTable({ ...props }) {
             return axios.post('http://127.0.0.1:3001/api/location/' + data['ca_id'], {
                 action: "Delete",
                 data: data,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token.accessToken}`
+                }
             })
         },
         onSuccess: async (res) => {
@@ -70,7 +76,7 @@ export default function LocationTable({ ...props }) {
             name: "Action",
             width: '120px',
             cell: (row: any) =>
-                <div className="flex justify-between md:flex-row flex-col lg:my-1">
+                <div className="flex flex-col justify-between md:flex-row lg:my-1">
                     <div className='mx-auto'>
                         <Button
                             variant="transparent"
@@ -134,7 +140,7 @@ export default function LocationTable({ ...props }) {
         align="center"
         header="Action"
         body={(data) => (
-            <div className="flex flex-1 justify-between">
+            <div className="flex justify-between flex-1">
                 <div className=''>
                     <Button
                         className='py-0 ps-3 pe-3'

@@ -4,11 +4,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useReducer, useState } from "react";
 import * as Icon from 'react-icons/bs';
 import { notifications } from "@mantine/notifications";
-import { getLocationList } from "../../api";
 import { LocationForm } from "@/components/Form";
 import Modal from "@/components/Modal";
-import { useLoaderData } from "react-router-dom";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface InitialNotification {
     action: string,
@@ -20,14 +18,6 @@ interface initial {
     title: string | undefined;
     data: [] | undefined;
     action: string | undefined;
-}
-
-export const loader = (queryClient: QueryClient, staleTime?: number | undefined) => async () => {
-    return queryClient.getQueryData(getLocationList().queryKey) ?? (await queryClient.fetchQuery({
-        ...getLocationList(),
-        staleTime: staleTime,
-    })
-    );
 }
 
 function reducer(_state: any, props: any) {
@@ -56,9 +46,6 @@ const initialState: initial = {
 }
 
 export default function Location() {
-    const location = useLoaderData() as Awaited<
-        ReturnType<ReturnType<typeof loader>>
-    >
     const queryClient = useQueryClient();
     const InitialNotification: any = {
         action: '',
@@ -74,8 +61,11 @@ export default function Location() {
             }
         }
     });
+
     const [update, setUpdate] = useState(false);
-    const [data, setData] = useState(location);
+    const data = queryClient.getQueryData(['location']) ?? useQuery({
+        queryKey: ['location']
+    }).data;
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const modalHandler = (action: any, title?: string | undefined, data?: any) => {
@@ -88,8 +78,6 @@ export default function Location() {
 
     useEffect(() => {
         if (notification.title === 'Success') {
-            setData(queryClient.getQueryData(['location']));
-
             switch (notification.action) {
                 case 'Add': {
                     notifications.show({

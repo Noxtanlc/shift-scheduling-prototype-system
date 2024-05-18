@@ -1,4 +1,5 @@
-import { getStaffList } from "@/api";
+import { getStaff } from "@/api";
+import { useAuth } from "@/misc/AuthProvider";
 import { TextInput, MultiSelect, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
@@ -13,8 +14,9 @@ export default function GroupForm({ ...props }) {
         originalSelectedStaff: [];
     }
     const queryClient = useQueryClient();
+    const { token } = useAuth();
     const staffList:any = useQuery({
-        ...getStaffList(), 
+        ...getStaff(token.accessToken), 
         enabled: false,
         initialData: queryClient.getQueryData(['staff'])
     }).data;
@@ -50,9 +52,13 @@ export default function GroupForm({ ...props }) {
     const mutation = useMutation({
         mutationKey: ["groupForm"],
         mutationFn: (formData: GroupFormValue) => {
-            return axios.post('http://127.0.0.1:3001/api/group/' + formData['groupID'], {
+            return axios.post('/api/group/' + formData['groupID'], {
                 action: action,
                 data: formData,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token.accessToken}`
+                }
             })
         },
         onSuccess: async (res) => {
@@ -62,7 +68,7 @@ export default function GroupForm({ ...props }) {
             });
 
             await queryClient.invalidateQueries({
-                queryKey: ['assignedStaff'],
+                queryKey: ['assigned_staff'],
                 refetchType: 'all',
             });
 
@@ -126,7 +132,7 @@ export default function GroupForm({ ...props }) {
                 maxDropdownHeight={120}
                 {...form.getInputProps('selectedStaff')}
             />
-            <div className="flex flex-1 justify-end mt-3">
+            <div className="flex justify-end flex-1 mt-3">
                 <Button
                     type='submit'
                 >

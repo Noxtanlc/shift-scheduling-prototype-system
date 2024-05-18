@@ -6,64 +6,17 @@ import { useState, useReducer, useEffect, useMemo } from "react";
 import {
     getAssignedStaff,
     getGroup,
-    getLocationList,
     getShiftData,
     getShiftCategory,
-    getStaffList,
+    getStaff,
 } from "@/api";
 import { ScheduleTable } from "@/components/DataDisplay/";
-import { scheduleData } from "@/misc/ScheduleData";
+import { ScheduleData } from "@/misc/ScheduleData";
 import Modal from "@/components/Modal";
 import { ImportForm } from "@/components/Form";
-import { QueryClient, useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useAuth } from "../../misc/AuthProvider";
-
-export const loader = (queryClient: QueryClient, staleTime?: number | undefined) => async () => {
-    const shift =
-        queryClient.getQueryData(getShiftData().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getShiftData(),
-            staleTime: staleTime,
-        }));
-
-    const location =
-        queryClient.getQueryData(getLocationList().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getLocationList(),
-            staleTime: staleTime,
-        }));
-
-    const group =
-        queryClient.getQueryData(getGroup().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getGroup(),
-            staleTime: staleTime,
-        }));
-
-    const assigned_staff =
-        queryClient.getQueryData(getAssignedStaff().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getAssignedStaff(),
-            staleTime: staleTime,
-        }));
-
-    const staff =
-        queryClient.getQueryData(getStaffList().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getStaffList(),
-            staleTime: staleTime,
-        }));
-
-    const shiftCategory =
-        queryClient.getQueryData(getShiftCategory().queryKey) ??
-        (await queryClient.fetchQuery({
-            ...getShiftCategory(),
-            staleTime: staleTime,
-        }));
-
-    return { shift, location, group, assigned_staff, staff, shiftCategory };
-};
 
 interface initial {
     title: string | undefined;
@@ -135,30 +88,30 @@ export default function Schedule() {
         response: "",
     };
 
-    var shift: any = useQuery({
+    var shift = useQuery({
         ...getShiftData(),
+        initialData: queryClient.getQueryData(['shift']),
         enabled: false,
-        initialData: queryClient.getQueryData(['shift'])
     }).data;
     const group: any = useQuery({
         ...getGroup(),
+        initialData: queryClient.getQueryData(['group']),
         enabled: false,
-        initialData: queryClient.getQueryData(['group'])
     }).data;
     const assigned_staff: any = useQuery({
         ...getAssignedStaff(),
+        initialData: queryClient.getQueryData(['assigned_staff']),
         enabled: false,
-        initialData: queryClient.getQueryData(['assignedStaff'])
     }).data;
     const staff: any = useQuery({
-        ...getStaffList(),
+        ...getStaff(),
+        initialData: queryClient.getQueryData(['staff']),
         enabled: false,
-        initialData: queryClient.getQueryData(['staff'])
     }).data;
     const shiftCategory: any = useQuery({
         ...getShiftCategory(),
+        initialData: queryClient.getQueryData(['shiftCategory']),
         enabled: false,
-        initialData: queryClient.getQueryData(['shiftCategory'])
     }).data;
 
     const date = new Date();
@@ -177,9 +130,11 @@ export default function Schedule() {
         };
     }, [pickerValue]);
     const [loading, setLoading] = useState(true);
+
     const [update, setUpdate] = useState(false);
-    const [notification, setNotification] =
-        useState<typeof InitialNotification>(InitialNotification);
+
+    const [notification, setNotification] = useState<typeof InitialNotification>(InitialNotification);
+
     const [opened, handler] = useDisclosure(false, {
         onClose() {
             if (scheduleFormMutation[0] === "success" || importFormMutation[0] === "success") {
@@ -187,21 +142,26 @@ export default function Schedule() {
             }
         },
     });
+
     const [modalProps, setModalProps] = useReducer(
         modalReducer,
         initialModalProps
     );
+
     const [groupFilter, setGroupFilter] = useState("0");
+
     const data = useMemo(
-        () => scheduleData(dateValue, staff, shift),
+        () => ScheduleData(dateValue, staff, shift),
         [dateValue, shift]
     );
+
     const selectVal: any = [
         {
             value: "0",
             label: "All",
         },
     ];
+
     group.map((row: any) => {
         selectVal.push({
             value: row["groupID"].toString(),

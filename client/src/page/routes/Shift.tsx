@@ -6,7 +6,6 @@ import { notifications } from "@mantine/notifications";
 import { getShiftCategory } from "@/api";
 import { ShiftCategoryTable } from "@/components/DataDisplay";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import { useLoaderData } from "react-router-dom";
 import Modal from "@/components/Modal";
 import { ShiftCategoryForm } from "@/components/Form";
 import { CSVLink } from "react-csv";
@@ -53,9 +52,7 @@ const initialState: initial = {
 
 export default function ShiftType() {
     const queryClient = useQueryClient();
-    const data = useLoaderData() as Awaited<
-        ReturnType<ReturnType<typeof loader>>
-    >;
+
     const InitialNotification: any = {
         action: '',
         title: '',
@@ -70,11 +67,11 @@ export default function ShiftType() {
         }
     });
     const [update, setUpdate] = useState(false);
-    const [stData, setData] = useState(data);
+    var stData:any = queryClient.getQueryData(['shiftCategory']);
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const CSVExport = () => (
-        <CSVLink data={data} filename={"shift_category.csv"}>
+        <CSVLink data={stData} filename={"shift_category.csv"}>
             <Button 
                 leftSection={<TbDownload size={16} />}
                 color={"lime"}
@@ -94,7 +91,6 @@ export default function ShiftType() {
 
     useEffect(() => {
         if (notification.title === 'Success') {
-            setData(queryClient.getQueryData(['shiftCategory']));
             switch (notification.action) {
                 case 'Add': {
                     notifications.show({

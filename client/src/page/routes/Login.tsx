@@ -52,7 +52,10 @@ export default function Login() {
                         username: res.data.name,
                         isAdmin: res.data.isAdmin,
                     });
-                    setToken(res.data.accessToken);
+                    setToken({
+                        accessToken: res.data.accessToken,
+                        refreshToken: res.data.refreshToken,
+                    });
                     navigate("/", { replace: true });
                 }, 3 * 1000);
             }

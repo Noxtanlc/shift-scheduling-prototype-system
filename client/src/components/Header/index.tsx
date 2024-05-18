@@ -9,8 +9,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { notifications } from "@mantine/notifications";
 import { useTheme } from "@/misc/ThemeProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header({ ...props }) {
+    const queryClient = useQueryClient();
     const { token, removeToken, user, removeUser } = useAuth();
     const navigate = useNavigate();
     const { theme, ToggleTheme } = useTheme()!;
@@ -26,9 +28,12 @@ export default function Header({ ...props }) {
 
     const handleLogout = async () => {
         await axios.post('/api/logout', {
-            token: token
-        })
-        .then(() => {
+            token: token.accessToken
+        }, {
+            headers: {
+                Authorization: `Bearer ${token.accessToken}`
+            }
+        }).then(() => {
             notifications.show({
                 id: 'logout',
                 withCloseButton: true,
@@ -39,20 +44,20 @@ export default function Header({ ...props }) {
                 icon: <TbCheck />,
                 className: 'logout-class',
             });
-    
+
             setTimeout(() => {
+                queryClient.clear();
                 removeToken();
                 removeUser();
-                navigate('/', { replace: true });
+                navigate('/');
             }, 3 * 1000);
-        })
-        .catch((err) => console.log(err));
+        }).catch((err) => console.log(err));
     };
 
     return (
         <>
             <div className='w-full my-auto'>
-                {token ? (
+                {token.accessToken ? (
                     <>
                         <Burger
                             size="sm"
@@ -78,7 +83,7 @@ export default function Header({ ...props }) {
                 ) : (<></>)}
             </div>
             <div className="flex flex-row justify-end w-full gap-2 sm:gap-4">
-                <Switch className="my-auto" size="md" color="dark.4" 
+                <Switch className="my-auto" size="md" color="dark.4"
                     defaultChecked={theme ? true : false}
                     onLabel={<MdDarkMode size={16} />}
                     offLabel={<MdLightMode size={16} />}
@@ -86,7 +91,7 @@ export default function Header({ ...props }) {
                         ToggleTheme();
                     }}
                 />
-                {token ? (
+                {token.accessToken ? (
                     <>
                         <div className='flex gap-3 my-auto font-bold'>
                             <div className="hidden my-auto sm:block" aria-label="user-name">{user.username !== '' ? user.username : <></>}</div>

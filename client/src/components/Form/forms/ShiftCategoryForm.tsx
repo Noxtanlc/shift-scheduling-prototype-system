@@ -1,3 +1,4 @@
+import { useAuth } from "@/misc/AuthProvider";
 import { ActionIcon, TextInput, ColorInput, Switch, Button } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -16,7 +17,7 @@ export default function ShiftCategoryForm({ ...props }) {
         end_time: string;
         active: boolean | undefined;
     }
-
+    const { token } = useAuth();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["ShiftCategoryForm"],
@@ -24,6 +25,10 @@ export default function ShiftCategoryForm({ ...props }) {
             return axios.post('http://127.0.0.1:3001/api/shift-category/' + formData['id'], {
                 action: action,
                 data: formData,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token.accessToken}`
+                }
             })
         },
         onSuccess: async (res) => {
@@ -131,7 +136,7 @@ export default function ShiftCategoryForm({ ...props }) {
                 placeholder="Select Color"
                 {...form.getInputProps('color')}
             />
-            <div className="md:flex md:flex-row md:gap-2 mb-3">
+            <div className="mb-3 md:flex md:flex-row md:gap-2">
                 <TimeInput
                     ref={sdRef}
                     leftSection={pickerControl(sdRef)}
@@ -164,7 +169,7 @@ export default function ShiftCategoryForm({ ...props }) {
                 }
                 }
             />
-            <div className="flex flex-1 justify-end mt-6">
+            <div className="flex justify-end flex-1 mt-6">
                 <Button
                     type='submit'
                 >

@@ -58,7 +58,7 @@ const generateAccessToken = (user: any) => {
         id: user.id,
         isAdmin: user.account_type,
     }, "loginKey", {
-        expiresIn: "2hr",
+        expiresIn: "30m",
     });
 }
 
@@ -78,13 +78,13 @@ app.post("/api/login", async (req, res) => {
     if (user.length > 0) {
         const accessToken = generateAccessToken(user[0]);
         const refreshToken = generateRefreshToken(user[0]);
+        refreshTokens.push(refreshToken);
         res.send({
             name: user[0].name,
             isAdmin: user[0].isAdmin,
             accessToken,
             refreshToken,
         });
-        refreshTokens.push(refreshToken);
     } else {
         res.status(401).send({
             response: "Username or password incorrect!"
@@ -122,6 +122,7 @@ const verify = (req: any, res: any, next: any) => {
     if (authHeader) {
         const token = authHeader.split(" ")[1];
         jwt.verify(token, "loginKey", (err: any, user: any) => {
+            console.log(req.user);
             if (err) {
                 return res.status(403).json("Token is not valid!");
             }
@@ -358,7 +359,7 @@ app.get("/api/group/", async (req, res) => {
         .catch(err => console.log(err));
 });
 
-app.post("/api/group/:id", async (req, res) => {
+app.post("/api/group/:id", verify, async (req, res) => {
     const action = req.body.action;
     const id = req.params.id;
     const data = req.body.data;
@@ -421,7 +422,7 @@ app.post("/api/group/:id", async (req, res) => {
             const check = "SELECT * FROM `group` WHERE LOWER(groupName) = ? AND `groupID` != ?";
             const Update = "UPDATE `group` SET groupName = ? WHERE groupID = ?";
             const as_Insert = "INSERT INTO `assigned_staff` (`as_FKstaffID`, `as_FKgroupID`) VALUES (?, ?)";
-            const as_Delete = "DELETE FROM `assigned_staff` WHERE as_FKstaffID = ?";
+            const as_Delete = "DELETE FROM `assigned_staff` WHERE `as_FKstaffID` = ? AND `as_FKgroupID` = ?";
             await db.query<RowDataPacket[]>(check, [gName, id])
                 .then((res: any) => {
                     if (res[0].length > 0)
@@ -449,7 +450,7 @@ app.post("/api/group/:id", async (req, res) => {
                 // Update Group Name
                 await Promise.all([
                     deletedVal.forEach((ele: any) => {
-                        db.query(as_Delete, [ele])
+                        db.query(as_Delete, [ele, id])
                     }),
 
                     selectedVal.forEach((ele: any) => {
@@ -508,7 +509,7 @@ app.get("/api/location", async (_req, res) => {
         });
 })
 
-app.post("/api/location/:id", async (req, res) => {
+app.post("/api/location/:id", verify, async (req, res) => {
     const action = req.body.action;
     const data = req.body.data;
     const id = req.params.id;
@@ -605,7 +606,7 @@ app.get("/api/shift-category", async (req, res) => {
         .catch(err => console.log(err));
 });
 
-app.post("/api/shift-category/:id", async (req, res) => {
+app.post("/api/shift-category/:id", verify, async (req, res) => {
     const data = req.body.data;
     const id = req.params.id;
     const action = req.body.action;
@@ -701,7 +702,3 @@ app.post("/api/shift-category/:id", async (req, res) => {
         }
     }
 });
-function aysnc() {
-    throw new Error("Function not implemented.");
-}
-

@@ -1,43 +1,21 @@
 import { Button } from "@mantine/core";
-import { getAssignedStaff, getGroup, getStaffList } from "@/api";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { Group } from "../../types";
 import { GroupTable } from "../../components/DataDisplay";
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import { useLoaderData } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BsPlusCircle } from "react-icons/bs";
 import { GroupForm } from "@/components/Form";
 import Modal from "@/components/Modal";
+import { useAuth } from "@/misc/AuthProvider";
+import { getAssignedStaff, getGroup } from "@/api";
 
 export async function queryFunction() {
     const response = await axios.get("http://127.0.0.1:3001/api/group");
     const data = await response.data;
     return data;
-}
-
-export const loader = (queryClient: QueryClient, staleTime?: number | undefined) => async () => {
-    const group = queryClient.getQueryData(['']) ?? (await queryClient.fetchQuery({
-        ...getGroup(),
-        staleTime: staleTime
-    })
-    );
-
-    const assigned_staff = queryClient.getQueryData(['assignedStaff']) ?? (await queryClient.fetchQuery({
-        ...getAssignedStaff(),
-        staleTime: staleTime
-    })
-    );
-
-    const staff = queryClient.getQueryData(['staff']) ?? (await queryClient.fetchQuery({
-        ...getStaffList(),
-        staleTime: staleTime
-    })
-    );
-
-    return { staff, group, assigned_staff };
 }
 
 function reducer(_state: any, props: any) {
@@ -58,10 +36,10 @@ function reducer(_state: any, props: any) {
     }
 }
 
-function organiseData(groupArr: [], asArr: []) {
+function organiseData(groupArr: any, asArr: any) {
     const tempArr: Group[] = [];
     if (groupArr !== undefined) {
-        groupArr.map(ele => {
+        groupArr.map((ele: any) => {
             tempArr.push({
                 groupID: ele['groupID'],
                 groupName: ele['groupName'],
@@ -69,7 +47,7 @@ function organiseData(groupArr: [], asArr: []) {
             });
 
             if (asArr !== undefined) {
-                asArr.forEach(asEle => {
+                asArr.forEach((asEle: any) => {
                     if (asEle['groupID'] === ele['groupID']) {
                         const index = tempArr.findIndex(tempEle => tempEle['groupID'] === asEle['groupID']);
                         tempArr[index].staff.push({
@@ -86,9 +64,8 @@ function organiseData(groupArr: [], asArr: []) {
 }
 
 export default function GroupPage() {
-    const { group, assigned_staff, staff } = useLoaderData() as Awaited<
-        ReturnType<ReturnType<typeof loader>>
-    >;
+    const queryClient = useQueryClient();
+    const { token } = useAuth();
     const ModalInitialState: {
         action: string | undefined,
         title: string | undefined,
@@ -98,8 +75,6 @@ export default function GroupPage() {
         data: [],
         title: undefined,
     }
-
-    const queryClient = useQueryClient();
 
     const [state, dispatch] = useReducer(reducer, ModalInitialState);
     const InitialNotification = {
@@ -115,7 +90,17 @@ export default function GroupPage() {
             }
         }
     });
-    const [GroupArray, setGroupArray] = useState<Group[]>(organiseData(group, assigned_staff));
+    
+    let staff = queryClient.getQueryData(['staff']);
+
+    const group = useQuery({
+        ...getGroup(token.accessToken),
+    }).data;
+    const assigned_staff = useQuery({
+        ...getAssignedStaff(token.accessToken),
+    }).data;
+
+    const GroupArray = useMemo(() => organiseData(group, assigned_staff), [group, assigned_staff]);
 
     function handleModalClick(action: any, title: string | undefined, data?: any) {
         dispatch({
@@ -127,10 +112,6 @@ export default function GroupPage() {
 
     useEffect(() => {
         if (notification.title === 'Success') {
-            const group: any = queryClient.getQueryData(['group']);
-            const assigned_staff: any = queryClient.getQueryData(['assignedStaff']);
-
-            setGroupArray(organiseData(group, assigned_staff));
             notifications.show({
                 title: notification.title,
                 message: notification.message,

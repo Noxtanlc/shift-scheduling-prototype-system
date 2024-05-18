@@ -1,3 +1,4 @@
+import { useAuth } from "@/misc/AuthProvider";
 import { TextInput, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
@@ -10,7 +11,7 @@ export default function LocationForm({ ...props }) {
         ca_name: string;
         ca_desc: string;
     }
-
+    const { token } = useAuth();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["locationForm"],
@@ -18,6 +19,10 @@ export default function LocationForm({ ...props }) {
             return axios.post('http://127.0.0.1:3001/api/location/' + formData['ca_id'], {
                 action: action,
                 data: formData,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token.accessToken}`
+                }
             })
         },
         onSuccess: async (res) => {
@@ -83,7 +88,7 @@ export default function LocationForm({ ...props }) {
                 placeholder="Enter location description"
                 {...form.getInputProps('ca_desc')}
             />
-            <div className="flex flex-1 justify-end mt-3">
+            <div className="flex justify-end flex-1 mt-3">
                 <Button
                     type='submit'
                 >

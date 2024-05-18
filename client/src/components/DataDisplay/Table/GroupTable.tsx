@@ -6,8 +6,10 @@ import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import * as icon from "react-icons/bs";
 import { useTheme } from "@/misc/ThemeProvider";
+import { useAuth } from "@/misc/AuthProvider";
 
 export default function GroupTable({ ...props }) {
+    const { token } = useAuth();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["groupForm"],
@@ -15,6 +17,10 @@ export default function GroupTable({ ...props }) {
             return axios.post('http://127.0.0.1:3001/api/group/' + data['groupID'], {
                 action: "Delete",
                 data: data,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token.accessToken}`
+                }
             })
         },
         onSuccess: async (res) => {
@@ -77,7 +83,7 @@ export default function GroupTable({ ...props }) {
         {
             name: "Employee List",
             cell: (row: any) => (
-                <div className='flex lg:flex-row gap-1 flex-wrap'>
+                <div className='flex flex-wrap gap-1 lg:flex-row'>
                     {staffList(row.staff)}
                 </div>
             ),
@@ -88,7 +94,7 @@ export default function GroupTable({ ...props }) {
             width: '100px',
             maxWidth: "10%",
             cell: (row: any) => (
-                <div className="flex lg:flex-row flex-col justify-between lg:my-0 my-1">
+                <div className="flex flex-col justify-between my-1 lg:flex-row lg:my-0">
                     <div className='mx-auto'>
                         <Button
                             variant="transparent"
@@ -123,8 +129,8 @@ export default function GroupTable({ ...props }) {
         const staff = [];
         for (let i = 0; i < row.length; i++) {
             staff.push(
-                <div key={row[i]['staffID']} className="font-bold lg:my-1 my-2">
-                    <div className="bg-sky-600 p-1 px-2 rounded-full text-center text-white">{row[i]['name']}</div>
+                <div key={row[i]['staffID']} className="my-2 font-bold lg:my-1">
+                    <div className="p-1 px-2 text-center text-white rounded-full bg-sky-600">{row[i]['name']}</div>
                 </div>
             );
         }

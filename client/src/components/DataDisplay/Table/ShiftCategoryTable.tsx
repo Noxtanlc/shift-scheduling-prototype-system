@@ -1,4 +1,5 @@
 import Loader from "@/common/loader";
+import { useAuth } from "@/misc/AuthProvider";
 import { useTheme } from "@/misc/ThemeProvider";
 import { Button } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
@@ -9,6 +10,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import * as icon from "react-icons/bs"
 
 export default function ShiftCategoryTable({ ...props }) {
+    const { token } = useAuth();
     const data = props.data;
     const queryClient = useQueryClient();
     const mutation = useMutation({
@@ -17,6 +19,10 @@ export default function ShiftCategoryTable({ ...props }) {
             return axios.post('http://127.0.0.1:3001/api/shift-category/' + data['id'], {
                 action: "Delete",
                 data: data,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token.accessToken}`
+                }
             })
         },
         onSuccess: async (res) => {
@@ -150,7 +156,7 @@ export default function ShiftCategoryTable({ ...props }) {
             name: "Action",
             maxWidth: '10%',
             cell: (row: any) =>
-                <div className="flex flex-1 justify-between md:flex-row flex-col">
+                <div className="flex flex-col justify-between flex-1 md:flex-row">
                     <div className='mx-auto'>
                         <Button
                             variant="transparent"
@@ -278,7 +284,7 @@ export default function ShiftCategoryTable({ ...props }) {
         align="center"
         header="Action"
         body={(data) => (
-            <div className="flex flex-1 justify-between">
+            <div className="flex justify-between flex-1">
                 <div className=''>
                     <Button
                         className='py-0 ps-3 pe-3'
