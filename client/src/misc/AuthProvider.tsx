@@ -51,6 +51,8 @@ export default function AuthProvider({ children }: any) {
     }
     catch (err) {
       console.log(err);
+      removeToken();
+      removeUser();
     }
   };
 
@@ -62,7 +64,7 @@ export default function AuthProvider({ children }: any) {
       removeToken();
       removeUser();
     }
-  }, [token]);
+  }, [token.accessToken]);
 
   const axiosJWT = axios.create();
 
@@ -72,7 +74,6 @@ export default function AuthProvider({ children }: any) {
       let currentDate = dayjs().unix();
       if (decodedToken.exp! < currentDate) {
         const data = await refreshToken();
-        console.log(data.accessToken);
         config.headers["Authorization"] = "Bearer " + data.accessToken;
       }
       return config;
@@ -83,7 +84,7 @@ export default function AuthProvider({ children }: any) {
   );
 
   const contextValue: any = useMemo(() => (
-    { token, setToken, removeToken, user, setUser, removeUser }
+    { token, setToken, removeToken, user, setUser, removeUser, axiosJWT }
   ), [token]);
 
   return (

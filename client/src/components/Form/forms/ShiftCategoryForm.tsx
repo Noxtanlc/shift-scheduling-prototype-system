@@ -17,12 +17,12 @@ export default function ShiftCategoryForm({ ...props }) {
         end_time: string;
         active: boolean | undefined;
     }
-    const { token } = useAuth();
+    const { token, axiosJWT } = useAuth();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["ShiftCategoryForm"],
         mutationFn: (formData: ShiftCategoryForm) => {
-            return axios.post('http://127.0.0.1:3001/api/shift-category/' + formData['id'], {
+            return axiosJWT.post('http://127.0.0.1:3001/api/shift-category/' + formData['id'], {
                 action: action,
                 data: formData,
             }, {
@@ -31,7 +31,7 @@ export default function ShiftCategoryForm({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res) => {
+        onSuccess: async (res:any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['shiftCategory'],
                 refetchType: 'all',

@@ -13,7 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header({ ...props }) {
     const queryClient = useQueryClient();
-    const { token, removeToken, user, removeUser } = useAuth();
+    const { token, removeToken, user, removeUser, axiosJWT } = useAuth();
     const navigate = useNavigate();
     const { theme, ToggleTheme } = useTheme()!;
     const [topOpened, topHandler] = useDisclosure();
@@ -27,7 +27,7 @@ export default function Header({ ...props }) {
     }, [pathname]);
 
     const handleLogout = async () => {
-        await axios.post('/api/logout', {
+        await axiosJWT.post('/api/logout', {
             token: token.accessToken
         }, {
             headers: {
@@ -51,7 +51,7 @@ export default function Header({ ...props }) {
                 removeUser();
                 navigate('/');
             }, 3 * 1000);
-        }).catch((err) => console.log(err));
+        }).catch((err:any) => console.log(err));
     };
 
     return (

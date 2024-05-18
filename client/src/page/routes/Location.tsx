@@ -7,6 +7,7 @@ import { notifications } from "@mantine/notifications";
 import { LocationForm } from "@/components/Form";
 import Modal from "@/components/Modal";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getLocation } from "@/api";
 
 interface InitialNotification {
     action: string,
@@ -63,8 +64,10 @@ export default function Location() {
     });
 
     const [update, setUpdate] = useState(false);
-    const data = queryClient.getQueryData(['location']) ?? useQuery({
-        queryKey: ['location']
+    const data = useQuery({
+        ...getLocation(),
+        enabled: true,
+        initialData: queryClient.getQueryData(['location'])
     }).data;
     const [state, dispatch] = useReducer(reducer, initialState);
 

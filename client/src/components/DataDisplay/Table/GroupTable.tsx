@@ -1,7 +1,6 @@
 import { Button, Loader } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import * as icon from "react-icons/bs";
@@ -9,12 +8,12 @@ import { useTheme } from "@/misc/ThemeProvider";
 import { useAuth } from "@/misc/AuthProvider";
 
 export default function GroupTable({ ...props }) {
-    const { token } = useAuth();
+    const { token, axiosJWT } = useAuth();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["groupForm"],
         mutationFn: (data: any) => {
-            return axios.post('http://127.0.0.1:3001/api/group/' + data['groupID'], {
+            return axiosJWT.post('http://127.0.0.1:3001/api/group/' + data['groupID'], {
                 action: "Delete",
                 data: data,
             }, {
@@ -23,7 +22,7 @@ export default function GroupTable({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res) => {
+        onSuccess: async (res:any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['group'],
                 refetchType: 'all',

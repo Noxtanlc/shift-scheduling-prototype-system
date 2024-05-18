@@ -9,7 +9,6 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { TbAsterisk, TbDownload } from "react-icons/tb";
 import { modals } from "@mantine/modals";
-import axios from "axios";
 import { getShiftCategory } from "@/api";
 import { useAuth } from "@/misc/AuthProvider";
 
@@ -26,7 +25,7 @@ const addNotes = {
 
 export default function ImportForm({ ...props }) {
     const queryClient = useQueryClient();
-    const { token } = useAuth();
+    const { token, axiosJWT } = useAuth();
     const staff = props.staff;
     const shiftCategory:any = useQuery({
         queryKey: ['shiftCategory']
@@ -190,7 +189,7 @@ export default function ImportForm({ ...props }) {
     const mutation = useMutation({
         mutationKey: ['importForm'],
         mutationFn: (value: typeof transformValues) => {
-            return axios.post('http://127.0.0.1:3001/api/shifts/import', {
+            return axiosJWT.post('http://127.0.0.1:3001/api/shifts/import', {
                 data: value.data,
                 month: value.month,
                 year: value.year,

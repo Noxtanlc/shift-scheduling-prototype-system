@@ -31,7 +31,6 @@ const config = {
     database: 'shift-scheduler', // Use database scheme
 }
 
-
 const db = mysql.createPool({
     connectionLimit: 20,
     ...config,
@@ -58,7 +57,7 @@ const generateAccessToken = (user: any) => {
         id: user.id,
         isAdmin: user.account_type,
     }, "loginKey", {
-        expiresIn: "30m",
+        expiresIn: "2hr",
     });
 }
 
@@ -94,7 +93,7 @@ app.post("/api/login", async (req, res) => {
 
 app.post("/api/refresh", (req, res) => {
     const refreshToken: any = req.body.token;
-
+    console.log(refreshTokens);
     if (!refreshToken) return res.status(401).json("You are not authenticated!");
 
     if (!refreshTokens.includes(refreshToken)) {
@@ -104,14 +103,13 @@ app.post("/api/refresh", (req, res) => {
     jwt.verify(refreshToken, "refreshKey", (err: any, user: any) => {
         err && console.log(err);
         refreshTokens = refreshTokens.filter((token: any) => token !== refreshToken);
-
         const newAccessToken = generateAccessToken(user);
         const newRefreshToken = generateRefreshToken(user);
 
         refreshTokens.push(newRefreshToken);
 
         res.status(200).json({
-            acccessToken: newAccessToken,
+            accessToken: newAccessToken,
             refreshToken: newRefreshToken,
         });
     });
@@ -121,11 +119,12 @@ const verify = (req: any, res: any, next: any) => {
     const authHeader = req.headers.authorization;
     if (authHeader) {
         const token = authHeader.split(" ")[1];
+
         jwt.verify(token, "loginKey", (err: any, user: any) => {
-            console.log(req.user);
             if (err) {
                 return res.status(403).json("Token is not valid!");
             }
+
             req.user = user;
             next();
         });
@@ -134,7 +133,7 @@ const verify = (req: any, res: any, next: any) => {
     }
 };
 
-app.post("/api/logout", verify, (req, res) => {
+app.post("/api/logout", verify, async (req, res) => {
     const refreshToken = req.body.token;
     refreshTokens = refreshTokens.filter((token: any) => token !== refreshToken);
     res.status(200).json("You logged out successfully.");

@@ -2,7 +2,6 @@ import { useAuth } from "@/misc/AuthProvider";
 import { TextInput, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useMemo } from "react";
 
 export default function LocationForm({ ...props }) {
@@ -11,12 +10,12 @@ export default function LocationForm({ ...props }) {
         ca_name: string;
         ca_desc: string;
     }
-    const { token } = useAuth();
+    const { token, axiosJWT } = useAuth();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["locationForm"],
         mutationFn: (formData: LocationFormValue) => {
-            return axios.post('http://127.0.0.1:3001/api/location/' + formData['ca_id'], {
+            return axiosJWT.post('http://127.0.0.1:3001/api/location/' + formData['ca_id'], {
                 action: action,
                 data: formData,
             }, {
@@ -25,7 +24,7 @@ export default function LocationForm({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res) => {
+        onSuccess: async (res:any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['location'],
                 refetchType: 'all',

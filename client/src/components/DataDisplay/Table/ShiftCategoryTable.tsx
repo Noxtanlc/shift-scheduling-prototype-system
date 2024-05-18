@@ -2,21 +2,19 @@ import Loader from "@/common/loader";
 import { useAuth } from "@/misc/AuthProvider";
 import { useTheme } from "@/misc/ThemeProvider";
 import { Button } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import DataTable, { TableColumn } from "react-data-table-component";
 import * as icon from "react-icons/bs"
 
 export default function ShiftCategoryTable({ ...props }) {
-    const { token } = useAuth();
+    const { token, axiosJWT } = useAuth();
     const data = props.data;
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["ShiftCategoryForm"],
         mutationFn: (data: any) => {
-            return axios.post('http://127.0.0.1:3001/api/shift-category/' + data['id'], {
+            return axiosJWT.post('http://127.0.0.1:3001/api/shift-category/' + data['id'], {
                 action: "Delete",
                 data: data,
             }, {
@@ -25,7 +23,7 @@ export default function ShiftCategoryTable({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res) => {
+        onSuccess: async (res:any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['shiftCategory'],
                 refetchType: 'all',

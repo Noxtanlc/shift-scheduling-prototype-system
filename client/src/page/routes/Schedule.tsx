@@ -61,7 +61,7 @@ const initialModalProps: initial = {
 };
 
 export default function Schedule() {
-    const { user } = useAuth();
+    const { user, token } = useAuth();
     const isAdmin = user.isAdmin;
     const queryClient = useQueryClient();
     const scheduleFormMutation = useMutationState({
@@ -88,18 +88,17 @@ export default function Schedule() {
         response: "",
     };
 
-    var shift = useQuery({
-        ...getShiftData(),
-        initialData: queryClient.getQueryData(['shift']),
+    var shift = queryClient.getQueryData(['shift']) ?? useQuery({
+        ...getStaff(token.accessToken),
         enabled: false,
     }).data;
     const group: any = useQuery({
-        ...getGroup(),
+        ...getGroup(token.accessToken),
         initialData: queryClient.getQueryData(['group']),
         enabled: false,
     }).data;
     const assigned_staff: any = useQuery({
-        ...getAssignedStaff(),
+        ...getAssignedStaff(token.accessToken),
         initialData: queryClient.getQueryData(['assigned_staff']),
         enabled: false,
     }).data;
@@ -109,7 +108,7 @@ export default function Schedule() {
         enabled: false,
     }).data;
     const shiftCategory: any = useQuery({
-        ...getShiftCategory(),
+        ...getShiftCategory(token.accessToken),
         initialData: queryClient.getQueryData(['shiftCategory']),
         enabled: false,
     }).data;
@@ -138,7 +137,7 @@ export default function Schedule() {
     const [opened, handler] = useDisclosure(false, {
         onClose() {
             if (scheduleFormMutation[0] === "success" || importFormMutation[0] === "success") {
-                shift = queryClient.getQueryData(['shift']);
+                shift = queryClient.getQueryData(['shift'])
             }
         },
     });

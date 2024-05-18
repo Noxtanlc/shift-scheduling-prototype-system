@@ -3,17 +3,16 @@ import { useTheme } from "@/misc/ThemeProvider";
 import { Button, Loader } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import DataTable, { TableColumn } from "react-data-table-component";
 import * as icon from "react-icons/bs"
 
 export default function LocationTable({ ...props }) {
-    const { token } = useAuth();
+    const { token, axiosJWT } = useAuth();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["locationForm"],
         mutationFn: (data: any) => {
-            return axios.post('http://127.0.0.1:3001/api/location/' + data['ca_id'], {
+            return axiosJWT.post('http://127.0.0.1:3001/api/location/' + data['ca_id'], {
                 action: "Delete",
                 data: data,
             }, {
@@ -22,7 +21,7 @@ export default function LocationTable({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res) => {
+        onSuccess: async (res:any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['location'],
                 refetchType: 'all',

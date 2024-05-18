@@ -206,12 +206,13 @@ export default function ScheduleForm({ ...props }) {
         ca_id: number | null;
     }
     const queryClient = useQueryClient();
-    const { token } = useAuth();
+    const { token, axiosJWT } = useAuth();
 
-    let shift = useQuery({
+    const shift = useQuery({
         ...getShiftData(token.accessToken),
+        enabled: false,
         initialData: queryClient.getQueryData(['shift']),
-    }).data;
+    });
     const staff: any = useQuery({
         ...getStaff(token.accessToken),
         initialData: queryClient.getQueryData(['staff']),
@@ -237,9 +238,6 @@ export default function ScheduleForm({ ...props }) {
             numDay: new Date(pickerValue!.getFullYear(), pickerValue!.getMonth() + 1, 0).getDate()
         }
     }, [pickerValue]);
-
-    const filteredStaff = staff.filter((ele: any) => ele.staff_id === props.staff_id);
-    const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift)[0], [shift]);
 
     const st_select: any = [{
         label: 'Select',
@@ -296,7 +294,7 @@ export default function ScheduleForm({ ...props }) {
     const mutation = useMutation({
         mutationKey: ['scheduleForm'],
         mutationFn: (value: FormType) => {
-            return axios.post('http://127.0.0.1:3001/api/shifts/staff/' + props.staff_id, {
+            return axiosJWT.post('http://127.0.0.1:3001/api/shifts/staff/' + props.staff_id, {
                 data: {
                     id: value.id,
                     start_date: dayjs(value.s_date).format('YYYY-MM-DD'),
@@ -336,13 +334,17 @@ export default function ScheduleForm({ ...props }) {
 
     useEffect(() => {
         if (mutation.isSuccess) {
-            shift = queryClient.getQueryData(['shift']);
+            shift.refetch();
             mutation.reset();
             form.setInitialValues(initialValues);
             setAction('');
             form.reset();
         }
     }, [mutation.status]);
+
+
+    const filteredStaff = staff.filter((ele: any) => ele.staff_id === props.staff_id);
+    const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift.data)[0], [shift.data]);
 
     return (
         <div className="flex flex-col gap-2 overflow-y-auto md:flex-row">

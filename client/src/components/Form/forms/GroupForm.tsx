@@ -3,7 +3,6 @@ import { useAuth } from "@/misc/AuthProvider";
 import { TextInput, MultiSelect, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useMemo } from "react";
 
 export default function GroupForm({ ...props }) {
@@ -14,9 +13,9 @@ export default function GroupForm({ ...props }) {
         originalSelectedStaff: [];
     }
     const queryClient = useQueryClient();
-    const { token } = useAuth();
-    const staffList:any = useQuery({
-        ...getStaff(token.accessToken), 
+    const { token, axiosJWT } = useAuth();
+    const staffList: any = useQuery({
+        ...getStaff(token.accessToken),
         enabled: false,
         initialData: queryClient.getQueryData(['staff'])
     }).data;
@@ -52,7 +51,7 @@ export default function GroupForm({ ...props }) {
     const mutation = useMutation({
         mutationKey: ["groupForm"],
         mutationFn: (formData: GroupFormValue) => {
-            return axios.post('/api/group/' + formData['groupID'], {
+            return axiosJWT.post('/api/group/' + formData['groupID'], {
                 action: action,
                 data: formData,
             }, {
@@ -61,7 +60,7 @@ export default function GroupForm({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res) => {
+        onSuccess: async (res: any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['group'],
                 refetchType: 'all',
