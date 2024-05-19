@@ -14,8 +14,11 @@ To run the application, download the source code and extract it whenever you lik
 <p>
   Open CMD inside the folders (client and server, seperately.) or integrated command prompt (Visual Studio Code) and run the command inside each individual folder.
   <blockquote>npm run dev</blockquote>
-  <image src="https://github.com/Noxtanlc/shift-scheduling-prototype-system/assets/58375587/b96864bd-d7ba-4863-8eef-c6c264c5b301" />
-  <image src="https://github.com/Noxtanlc/shift-scheduling-prototype-system/assets/58375587/9eb214f9-a567-4d04-b921-7cca47bb6790" />
+  
+<div align='center'>
+  <image src="https://github.com/Noxtanlc/shift-scheduling-prototype-system/assets/58375587/b96864bd-d7ba-4863-8eef-c6c264c5b301" style="height: 200px"/>
+  <image src="https://github.com/Noxtanlc/shift-scheduling-prototype-system/assets/58375587/b313e1c5-6c64-4c36-bca5-e1b0b6a37d08" style="height: 200px" />
+</div>
 
 </p>
 <br/>
