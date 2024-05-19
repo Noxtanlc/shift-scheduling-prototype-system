@@ -93,7 +93,6 @@ app.post("/api/login", async (req, res) => {
 
 app.post("/api/refresh", (req, res) => {
     const refreshToken: any = req.body.token;
-    console.log(refreshTokens);
     if (!refreshToken) return res.status(401).json("You are not authenticated!");
 
     if (!refreshTokens.includes(refreshToken)) {

@@ -49,9 +49,9 @@ export default function Header({ ...props }) {
                 queryClient.clear();
                 removeToken();
                 removeUser();
-                navigate('/');
+                navigate('/', { replace: true });
             }, 3 * 1000);
-        }).catch((err:any) => console.log(err));
+        }).catch((err: any) => console.log(err));
     };
 
     return (

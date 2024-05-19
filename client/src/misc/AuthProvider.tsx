@@ -8,6 +8,7 @@ import {
   useEffect,
   useMemo,
 } from "react";
+import { Navigate } from "react-router-dom";
 
 const AuthContext = createContext<any>('');
 
@@ -51,8 +52,6 @@ export default function AuthProvider({ children }: any) {
     }
     catch (err) {
       console.log(err);
-      removeToken();
-      removeUser();
     }
   };
 
@@ -79,9 +78,23 @@ export default function AuthProvider({ children }: any) {
       return config;
     },
     (error) => {
+      removeToken();
+      removeUser();
+      <Navigate to='/' replace />
       return Promise.reject(error)
     }
   );
+
+  if (token.accessToken) {
+    const decodedToken = jwtDecode(token.accessToken);
+    let decodedTime = dayjs.unix(decodedToken.exp!);
+    let currentDate = dayjs();
+
+    if (currentDate.diff(decodedTime, 'hour') >= 12) {
+      removeToken();
+      removeUser();
+    }
+  }
 
   const contextValue: any = useMemo(() => (
     { token, setToken, removeToken, user, setUser, removeUser, axiosJWT }
