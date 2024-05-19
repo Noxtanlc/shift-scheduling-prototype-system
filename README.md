@@ -11,5 +11,10 @@ To run the application, download the source code and extract it whenever you lik
   Import the database scheme into your MySQL Workbench or other similar tools. That's it. Database connection configuration is located in the server folder index.tx if changes are needed.
 </p>
 <br/>
+<p>
+  Open CMD inside the folders (client and server, seperately.) or integrated command prompt (Visual Studio Code) and run the command inside each individual folder.
+  <blockquote>npm run dev</blockquote>
+</p>
+<br/>
 <h2>Author Note </h2>
 <i>- Tan Li Chuang</i>
