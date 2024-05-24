@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 export default function Navbar({ ...props }) {
     const [active, setActive] = useState(0);
     const { pathname } = useLocation();
-    const classes = 'dark:hover:bg-slate-500';
+    const classes = 'hover:bg-slate-300 dark:hover:bg-slate-500 rounded-xl';
 
     useEffect(() => {
         props.data.forEach((ele:any) => {

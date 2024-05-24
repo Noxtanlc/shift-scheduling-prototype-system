@@ -30,7 +30,7 @@ export default function Login() {
     const mutation = useMutation({
         mutationKey: ['login'],
         mutationFn: (cred: typeof form.values) => {
-            return axios.post('http://127.0.0.1:3001/api/login', {
+            return axios.post('/api/login', {
                 username: cred.username,
                 password: cred.password
             });
@@ -42,7 +42,7 @@ export default function Login() {
                     withCloseButton: true,
                     autoClose: 1500,
                     title: "Logging in",
-                    message: 'Logging into the application...',
+                    message: 'Logging in, please wait...',
                     color: 'cyan',
                     icon: <TbCheck />,
                     className: 'login-class',

@@ -8,7 +8,7 @@ export default function mobileNavbar({ ...props }) {
     const data = props.data;
     const [active, setActive] = useState(0);
     const { pathname } = useLocation();
-    const hoverClass = "dark:hover:bg-slate-600"
+    const hoverClass = "hover:bg-slate-200 dark:hover:bg-slate-600"
 
     useEffect(() => {
         data.forEach((ele:any) => {

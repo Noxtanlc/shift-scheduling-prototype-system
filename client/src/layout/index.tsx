@@ -78,8 +78,8 @@ export default function DefaultLayout() {
   return (
     <div className="flex h-screen">
       <div className="flex-col w-screen overflow-hidden">
-        <div className="relative flex flex-col h-full dark:bg-zinc-600 dark:text-stone-200">
-          <div className="z-[199] top-0 flex flex-1 h-14 p-2 justify-between dark:bg-zinc-800 bg-white shadow px-4">
+        <div className="relative flex flex-col h-full dark:bg-zinc-600/20 dark:text-stone-200">
+          <div className="z-[199] top-0 flex flex-1 h-14 p-2 justify-between dark:bg-zinc-900 bg-white shadow px-4">
             <Header
               topbarOpened={topbarOpened}
               setTopbarOpened={setTopbarOpened}
@@ -126,7 +126,7 @@ export default function DefaultLayout() {
             >
               {(transitionStyle) => (
                 <div
-                  className="dark:bg-zinc-700 dark:text-white bg-gray-100 z-[198] lg:flex hidden top-0 left-0 flex-col w-60"
+                  className="dark:bg-zinc-800/60 dark:text-white bg-gray-100 z-[198] lg:flex hidden top-0 left-0 flex-col w-60"
                   id="sidebar"
                   style={{ ...transitionStyle }}
                 >

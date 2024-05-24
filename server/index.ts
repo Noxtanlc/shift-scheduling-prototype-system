@@ -132,6 +132,15 @@ const verify = (req: any, res: any, next: any) => {
     }
 };
 
+
+/* Re-authenticate on server restart
+app.get('/api/auth', async (req, res) => {
+  const token = 
+
+  jwt.decode()
+});
+*/
+
 app.post("/api/logout", verify, async (req, res) => {
     const refreshToken = req.body.token;
     refreshTokens = refreshTokens.filter((token: any) => token !== refreshToken);

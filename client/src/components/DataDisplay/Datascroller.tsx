@@ -1,4 +1,4 @@
-import { Badge, ScrollArea, Table } from "@mantine/core";
+import { ScrollArea, Table } from "@mantine/core";
 import { useMemo } from "react";
 
 export function CustomDataScroller({ ...props }) {
@@ -23,8 +23,8 @@ export function CustomDataScroller({ ...props }) {
     return (
         <div className="drop-shadow-lg">
             <ScrollArea h={150}>
-                <Table stickyHeader withRowBorders={false} className="text-sm bg-neutral-300 dark:bg-zinc-800">
-                    <Table.Thead className="text-white bg-neutral-800">
+                <Table stickyHeader withRowBorders={false} className="text-xs bg-zinc-200/20 dark:bg-zinc-700/20">
+                    <Table.Thead className="text-white bg-neutral-600">
                         <Table.Tr>
                             <Table.Th
                                 className="text-center"

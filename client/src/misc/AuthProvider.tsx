@@ -1,3 +1,4 @@
+import App from "@/App";
 import { readLocalStorageValue, useLocalStorage } from "@mantine/hooks";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -85,16 +86,25 @@ export default function AuthProvider({ children }: any) {
     }
   );
 
+  /* Re-authenticate on server restart
   if (token.accessToken) {
     const decodedToken = jwtDecode(token.accessToken);
     let decodedTime = dayjs.unix(decodedToken.exp!);
     let currentDate = dayjs();
 
-    if (currentDate.diff(decodedTime, 'hour') >= 12) {
+    if (currentDate.diff(decodedTime, 'hour') >= 4) {
       removeToken();
       removeUser();
+    } 
+    else {
+      async() => {
+        await axios.post('/api/login', {
+          username: user.username,
+        })
+      }
     }
   }
+  */
 
   const contextValue: any = useMemo(() => (
     { token, setToken, removeToken, user, setUser, removeUser, axiosJWT }
