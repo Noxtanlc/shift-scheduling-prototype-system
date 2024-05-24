@@ -35,6 +35,8 @@ To run the application, download the source code and extract it whenever you lik
 </div>
 
 </p>
+<br />
+
 <br/>
 <hr />
 <i>
