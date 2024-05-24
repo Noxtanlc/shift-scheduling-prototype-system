@@ -11,10 +11,10 @@
   <li>MySQL Server</li>
 </ul>
 <hr />
-<h3>Built On</h3>
+<h3>Powered By</h3>
 <ul>
-  <li>React v18.3.1</li>
-  <li>Vite v5.2.11</li>
+  <li>React >= v18.3.1</li>
+  <li>Vite >= v5.2.11</li>
 </ul>
 <hr />
 <h3>Setting up</h3>
