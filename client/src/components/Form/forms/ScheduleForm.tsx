@@ -451,7 +451,7 @@ export default function ScheduleForm({ ...props }) {
                     <div className="flex gap-3">
                         <Button color="red"
                             style={{ display: action === 'edit' || action === 'delete' ? undefined : 'none' }}
-                            onClick={(e) => {
+                            onClick={(e:any) => {
                                 e.preventDefault();
                                 setAction('delete');
                                 mutation.mutate(form.getValues());

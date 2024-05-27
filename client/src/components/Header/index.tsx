@@ -6,19 +6,18 @@ import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { useAuth } from "@/misc/AuthProvider";
 import { TbCheck, TbChevronDown } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { notifications } from "@mantine/notifications";
 import { useTheme } from "@/misc/ThemeProvider";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header({ ...props }) {
-    const queryClient = useQueryClient();
-    const { token, removeToken, user, removeUser, axiosJWT } = useAuth();
+    const { token, setToken, user, axiosJWT } = useAuth();
     const navigate = useNavigate();
     const { theme, ToggleTheme } = useTheme()!;
     const [topOpened, topHandler] = useDisclosure();
     const [sideOpened, sideHandler] = useDisclosure(true);
     const { pathname } = useLocation();
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         if (topOpened) {
@@ -46,10 +45,9 @@ export default function Header({ ...props }) {
             });
 
             setTimeout(() => {
-                queryClient.clear();
-                removeToken();
-                removeUser();
+                setToken();
                 navigate('/', { replace: true });
+                queryClient.removeQueries();
             }, 3 * 1000);
         }).catch((err: any) => console.log(err));
     };

@@ -40,6 +40,25 @@ export default function AuthProvider({ children }: any) {
     }
   });
 
+  //* Auth on Server Restart
+  const reAuth = async () => {
+    await axios.post('/api/auth', {
+      accessToken: token.accessToken,
+      refreshToken: token.refreshToken,
+    }).then((res) => {
+      setToken({
+        accessToken: res.data.accessToken,
+        refreshToken: res.data.refreshToken,
+      });
+      setUser({
+        username: res.data.name,
+        isAdmin: res.data.isAdmin,
+      });
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
   const refreshToken = async () => {
     try {
       const res = await axios.post('/api/refresh', {
@@ -66,6 +85,14 @@ export default function AuthProvider({ children }: any) {
     }
   }, [token.accessToken]);
 
+  useEffect(() => {
+    if (!tokenValue) {
+      delete axios.defaults.headers.common["Authorization"];
+      removeUser();
+      <Navigate to='/' replace />
+    }
+  }, [tokenValue]);
+
   const axiosJWT = axios.create();
 
   axiosJWT.interceptors.request.use(
@@ -85,26 +112,6 @@ export default function AuthProvider({ children }: any) {
       return Promise.reject(error)
     }
   );
-
-  /* Re-authenticate on server restart
-  if (token.accessToken) {
-    const decodedToken = jwtDecode(token.accessToken);
-    let decodedTime = dayjs.unix(decodedToken.exp!);
-    let currentDate = dayjs();
-
-    if (currentDate.diff(decodedTime, 'hour') >= 4) {
-      removeToken();
-      removeUser();
-    } 
-    else {
-      async() => {
-        await axios.post('/api/login', {
-          username: user.username,
-        })
-      }
-    }
-  }
-  */
 
   const contextValue: any = useMemo(() => (
     { token, setToken, removeToken, user, setUser, removeUser, axiosJWT }

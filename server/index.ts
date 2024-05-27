@@ -50,12 +50,12 @@ app.listen(port, () => {
     console.log("running on port 3001");
 })
 
-let refreshTokens: any = [];
+var refreshTokens: any = [];
 
 const generateAccessToken = (user: any) => {
     return jwt.sign({
         id: user.id,
-        isAdmin: user.account_type,
+        isAdmin: user.isAdmin,
     }, "loginKey", {
         expiresIn: "2hr",
     });
@@ -71,22 +71,32 @@ const generateRefreshToken = (user: any) => {
 app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
-    const [result] = await db.query("SELECT * FROM `user` WHERE `username` = ? AND `password` = ?", [username, password]);
-    const user: any = result;
+    const [result]:any = await db.query("SELECT * FROM `user`");
 
-    if (user.length > 0) {
-        const accessToken = generateAccessToken(user[0]);
-        const refreshToken = generateRefreshToken(user[0]);
-        refreshTokens.push(refreshToken);
-        res.send({
-            name: user[0].name,
-            isAdmin: user[0].isAdmin,
-            accessToken,
-            refreshToken,
-        });
+    const user = result.filter((ele:any) => ele.username === username)[0];
+
+    if (user) {
+        if (user.password === password) {
+            console.log("YES");
+            const accessToken = generateAccessToken(user);
+            const refreshToken = generateRefreshToken(user);
+            refreshTokens.push(refreshToken);
+            res.send({
+                name: user.name,
+                isAdmin: user.isAdmin,
+                accessToken,
+                refreshToken,
+            });
+        } else {
+            res.status(401).send({
+                errInput: 'password',
+                response: "Password is incorrect!"
+            });
+        }
     } else {
         res.status(401).send({
-            response: "Username or password incorrect!"
+            errInput: 'username',
+            response: "User not found!"
         });
     }
 });
@@ -132,14 +142,36 @@ const verify = (req: any, res: any, next: any) => {
     }
 };
 
+// Re-authenticate if server restart
+app.post('/api/auth', async (req, res) => {
+    const accessToken = req.body.accessToken;
+    const refreshToken = req.body.refreshToken;
+    const decodedToken: any = jwt.decode(accessToken);
 
-/* Re-authenticate on server restart
-app.get('/api/auth', async (req, res) => {
-  const token = 
-
-  jwt.decode()
+    if (!refreshTokens) {
+        const user = {
+            id: decodedToken.id,
+            isAdmin: decodedToken.isAdmin,
+        }
+    
+        const newAccessToken = generateAccessToken(user);
+        const newRefreshToken = generateRefreshToken(user);
+        refreshTokens.push(newRefreshToken);
+        res.send({
+            ...user,
+            newAccessToken,
+            newRefreshToken,
+        });
+    } else {
+        if (!refreshTokens.includes(refreshToken)) {
+            return res.status(403).json("Refresh token is not valid!");
+        }
+    }
 });
-*/
+
+app.get('/api/authCheck', (req, res) => {
+    return res.json(refreshTokens.length);
+})
 
 app.post("/api/logout", verify, async (req, res) => {
     const refreshToken = req.body.token;
@@ -157,7 +189,7 @@ app.get("/api/shifts/", async (req, res) => {
         .catch(err => console.log(err));
 });
 
-app.post("/api/shifts/staff/:id", async (req, res) => {
+app.post("/api/shifts/staff/:id", verify, async (req, res) => {
     const data = req.body.data;
     const action = req.body.action;
     const staff_id = req.params.id;

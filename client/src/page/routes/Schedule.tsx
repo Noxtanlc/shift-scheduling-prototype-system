@@ -91,27 +91,31 @@ export default function Schedule() {
     var shift = queryClient.getQueryData(['shift']) ?? useQuery({
         ...getStaff(token.accessToken),
         enabled: false,
-    }).data;
+    }).data ?? [];
+    
     const group: any = useQuery({
         ...getGroup(token.accessToken),
         initialData: queryClient.getQueryData(['group']),
         enabled: false,
-    }).data;
+    }).data ?? [];
+
     const assigned_staff: any = useQuery({
         ...getAssignedStaff(token.accessToken),
         initialData: queryClient.getQueryData(['assigned_staff']),
         enabled: false,
-    }).data;
+    }).data ?? [];
+
     const staff: any = useQuery({
         ...getStaff(),
         initialData: queryClient.getQueryData(['staff']),
         enabled: false,
-    }).data;
+    }).data ?? [];
+
     const shiftCategory: any = useQuery({
         ...getShiftCategory(token.accessToken),
         initialData: queryClient.getQueryData(['shiftCategory']),
         enabled: false,
-    }).data;
+    }).data ?? [];
 
     const date = new Date();
     const [pickerValue, setPickerValue] = useState<Date | null>(
@@ -325,7 +329,7 @@ export default function Schedule() {
                                         size="sm"
                                         label="Group"
                                         data={selectVal}
-                                        onChange={(event) =>
+                                        onChange={(event:any) =>
                                             setGroupFilter(event.currentTarget.value)
                                         }
                                         style={{
