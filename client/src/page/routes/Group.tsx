@@ -129,6 +129,10 @@ export default function GroupPage() {
         }
     }, [notification]);
 
+    const modalProps = {
+        centered: true,
+    }
+
     return (
         <div key="group" className="flex flex-col flex-1 p-2">
             <Modal
@@ -139,7 +143,7 @@ export default function GroupPage() {
                 setUpdates={setUpdates}
                 setNotification={setNotification}
                 title={state?.title}
-
+                modalProps={modalProps}
                 Form={
                     <GroupForm
                         data={state?.data}

@@ -88,10 +88,7 @@ export default function Schedule() {
         response: "",
     };
 
-    var shift = queryClient.getQueryData(['shift']) ?? useQuery({
-        ...getStaff(token.accessToken),
-        enabled: false,
-    }).data ?? [];
+    var shift = queryClient.getQueryData(['shift']);
     
     const group: any = useQuery({
         ...getGroup(token.accessToken),
@@ -139,11 +136,13 @@ export default function Schedule() {
     const [notification, setNotification] = useState<typeof InitialNotification>(InitialNotification);
 
     const [opened, handler] = useDisclosure(false, {
+        /*
         onClose() {
             if (scheduleFormMutation[0] === "success" || importFormMutation[0] === "success") {
                 shift = queryClient.getQueryData(['shift'])
             }
         },
+        */
     });
 
     const [modalProps, setModalProps] = useReducer(

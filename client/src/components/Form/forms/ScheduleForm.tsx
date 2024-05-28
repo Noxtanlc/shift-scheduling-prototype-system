@@ -63,7 +63,7 @@ function CustomTable({ ...props }) {
                             root: {
                                 height: "100%",
                                 padding: 0,
-                                fontSize: "0.5rem"
+                                fontSize: "0.5rem",
                             }
                         }}
                         onClick={() => {
@@ -208,21 +208,19 @@ export default function ScheduleForm({ ...props }) {
     const queryClient = useQueryClient();
     const { token, axiosJWT } = useAuth();
 
-    const shift = useQuery({
-        ...getShiftData(token.accessToken),
-        enabled: false,
-        initialData: queryClient.getQueryData(['shift']),
-    });
+    var shift = queryClient.getQueryData(['shift']);
     const staff: any = useQuery({
         ...getStaff(token.accessToken),
         initialData: queryClient.getQueryData(['staff']),
         enabled: false,
     }).data;
+
     const shiftCategory: any = useQuery({
         ...getShiftCategory(token.accessToken),
         initialData: queryClient.getQueryData(['shiftCategory']),
         enabled: false,
     }).data;
+
     let location: any = useQuery({
         ...getLocation(token.accessToken),
         initialData: queryClient.getQueryData(['location']),
@@ -241,11 +239,11 @@ export default function ScheduleForm({ ...props }) {
 
     const st_select: any = [{
         label: 'Select',
-        value: 0,
+        value: null,
     }];
     const ca_select: any = [{
-        label: 'None',
-        value: 0,
+        label: 'Select',
+        value: null,
     }];
 
     st.map((ele: any) => {
@@ -278,14 +276,14 @@ export default function ScheduleForm({ ...props }) {
         initialValues,
         validate: {
             st_id: (value) =>
-                value === 0 ? 'Select a shift category' : null,
+                value === null || value === 0 ? 'Select a shift category' : undefined,
             s_date: (value) => {
                 if (dayjs(value) > dayjs(form.getValues().e_date)) {
                     return (
                         'Start date cannot be greater than end date'
                     );
                 } else {
-                    return null;
+                    return undefined;
                 }
             },
         }
@@ -334,7 +332,7 @@ export default function ScheduleForm({ ...props }) {
 
     useEffect(() => {
         if (mutation.isSuccess) {
-            shift.refetch();
+            shift = queryClient.getQueryData(['shift']);
             mutation.reset();
             form.setInitialValues(initialValues);
             setAction('');
@@ -344,7 +342,7 @@ export default function ScheduleForm({ ...props }) {
 
 
     const filteredStaff = staff.filter((ele: any) => ele.staff_id === props.staff_id);
-    const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift.data)[0], [shift.data]);
+    const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift)[0], [shift]);
 
     return (
         <div className="flex flex-col gap-2 overflow-y-auto md:flex-row">

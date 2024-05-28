@@ -5,7 +5,7 @@ import * as Icon from 'react-bootstrap-icons';
 import { notifications } from "@mantine/notifications";
 import { getShiftCategory } from "@/api";
 import { ShiftCategoryTable } from "@/components/DataDisplay";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import Modal from "@/components/Modal";
 import { ShiftCategoryForm } from "@/components/Form";
 import { CSVLink } from "react-csv";
@@ -67,7 +67,10 @@ export default function ShiftType() {
         }
     });
     const [update, setUpdate] = useState(false);
-    var stData:any = queryClient.getQueryData(['shiftCategory']);
+    var stData:any = queryClient.getQueryData(['shiftCategory']) ?? useQuery({
+        ...getShiftCategory(),
+        enabled: false,
+    });
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const CSVExport = () => (

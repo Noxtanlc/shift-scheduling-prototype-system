@@ -43,7 +43,7 @@ export default function DashboardTable({ ...props }) {
             center: false,
             minWidth: "250px",
             cell: (row: any) => (
-                <div className='flex flex-row w-full justify-between dark:text-slate-300'>
+                <div className='flex flex-row justify-between w-full dark:text-slate-300'>
                     <div className="my-auto font-bold text-md text-slate-600 dark:text-slate-200">
                         {row.name}
                     </div>
@@ -62,7 +62,7 @@ export default function DashboardTable({ ...props }) {
             center: true,
             cell: (row) => {
                 return (
-                    <div className="rounded-xl px-2 font-bold text-white text-xs" style={{ backgroundColor: row['shift'][i]["color"] }} >
+                    <div className="px-2 text-xs font-bold text-white rounded-xl" style={{ backgroundColor: row['shift'][i]["color"] }} >
                         <div className="text-center">{row['shift'][i]["st_alias"]}</div>
                         <div className="text-center">{row['shift'][i]["ca_alias"] ? "(" + row['shift'][i]["ca_alias"] + ")" : ""}</div>
                     </div>
@@ -77,6 +77,8 @@ export default function DashboardTable({ ...props }) {
             data={filteredItems}
             responsive
             pagination
+            paginationPerPage={20}
+            paginationRowsPerPageOptions={[20, 25, 30]}
             persistTableHead
             paginationResetDefaultPage={resetPaginationToggle}
             theme={theme ? theme : undefined}

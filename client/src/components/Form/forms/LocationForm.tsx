@@ -78,7 +78,7 @@ export default function LocationForm({ ...props }) {
         >
             <TextInput
                 required
-                label="Name"
+                label="Alias"
                 placeholder="Enter location code/name"
                 {...form.getInputProps('ca_name')}
             />

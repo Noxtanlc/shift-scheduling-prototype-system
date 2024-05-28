@@ -137,18 +137,21 @@ export default function Location() {
         }
     }, [notification]);
 
+    const modalProps = {
+        centered: true,
+    }
+
     return (
         <>
             <Modal
+                modalProps={modalProps}
                 opened={opened}
                 handler={handler}
                 action={state?.action}
                 data={state?.data}
-
                 update={update}
                 setUpdate={setUpdate}
                 setNotification={setNotification}
-
                 title={state?.title}
                 Form={
                     <LocationForm

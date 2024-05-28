@@ -94,10 +94,10 @@ export default function Header({ ...props }) {
                         <div className='flex gap-3 my-auto font-bold'>
                             <div className="hidden my-auto sm:block" aria-label="user-name">{user.username !== '' ? user.username : <></>}</div>
                             <div className="my-auto">
-                                <Menu trigger="click" width={150}>
+                                <Menu trigger="click" width={120}>
                                     <Menu.Target>
-                                        <div className="flex justify-around px-2 ease-out border dark:border-white/30 border-black/30 hover:transition hover:scale-110 bg-slate-600/50 rounded-xl">
-                                            <Avatar className="" color={'white'}
+                                        <div className="flex justify-around px-1 ease-out border dark:border-white/30 border-black/30 hover:transition hover:scale-105 bg-slate-300/50 rounded-2xl">
+                                            <Avatar
                                                 classNames={{
                                                     placeholder: 'bg-transparent'
                                                 }}
@@ -109,7 +109,6 @@ export default function Header({ ...props }) {
                                         <Menu.Label className="block sm:hidden" aria-label="user-name">{user.username !== '' ? user.username : <></>}</Menu.Label>
                                         <Menu.Item leftSection={<></>} onClick={() => handleLogout()} >Logout</Menu.Item>
                                     </Menu.Dropdown>
-
                                 </Menu>
                             </div>
                         </div>

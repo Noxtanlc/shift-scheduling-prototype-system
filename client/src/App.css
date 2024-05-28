@@ -64,6 +64,10 @@
   transition-duration: 0.25s;
 }
 
+.rdt_Pagination select option {
+  color: black;
+}
+
 /*
 #scheduleFormTable {
   @media (min-Width: )

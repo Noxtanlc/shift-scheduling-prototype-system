@@ -40,7 +40,8 @@ export default function AuthProvider({ children }: any) {
     }
   });
 
-  //* Auth on Server Restart
+  //* Auth on Server Restart (Not Working)
+  /*
   const reAuth = async () => {
     await axios.post('/api/auth', {
       accessToken: token.accessToken,
@@ -58,6 +59,7 @@ export default function AuthProvider({ children }: any) {
       console.log(err);
     });
   }
+  */
 
   const refreshToken = async () => {
     try {
@@ -76,22 +78,32 @@ export default function AuthProvider({ children }: any) {
   };
 
   useEffect(() => {
+    const checkRefreshToken = async() => {
+      const length = await axios.get('/api/auths');
+      return length.data;
+    }
+
+    checkRefreshToken()
+    .then( (res) => {
+      if (!res) {
+        delete axios.defaults.headers.common["Authorization"];
+        removeToken();
+        removeUser();
+        <Navigate to='/' replace />
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (token.accessToken) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + token.accessToken;
     } else {
       delete axios.defaults.headers.common["Authorization"];
       removeToken();
       removeUser();
-    }
-  }, [token.accessToken]);
-
-  useEffect(() => {
-    if (!tokenValue) {
-      delete axios.defaults.headers.common["Authorization"];
-      removeUser();
       <Navigate to='/' replace />
     }
-  }, [tokenValue]);
+  }, [token.accessToken]);
 
   const axiosJWT = axios.create();
 

@@ -78,7 +78,7 @@ export default function DefaultLayout() {
   return (
     <div className="flex h-screen">
       <div className="flex-col w-screen overflow-hidden">
-        <div className="relative flex flex-col h-full bg-sky-100/60 dark:bg-zinc-600/20 dark:text-stone-200">
+        <div className="relative flex flex-col h-full bg-sky-100/60 dark:bg-zinc-600/20">
           <div className="z-[199] top-0 flex flex-1 h-14 p-2 justify-between dark:bg-zinc-900 bg-white shadow px-4">
             <Header
               topbarOpened={topbarOpened}

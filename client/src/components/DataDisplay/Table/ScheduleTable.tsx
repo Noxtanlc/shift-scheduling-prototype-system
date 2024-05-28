@@ -37,7 +37,7 @@ export default function ScheduleTable({ ...props }) {
         {
             name: (
                 <div className="flex flex-col dark:text-slate-200">
-                    <div className="font-bold text-sm">
+                    <div className="text-sm font-bold">
                         Name
                     </div>
                     <div>
@@ -49,8 +49,8 @@ export default function ScheduleTable({ ...props }) {
             center: false,
             minWidth: "250px",
             cell: (row: any) => (
-                <div className='flex flex-row w-full justify-between dark:text-slate-300'>
-                    <div className="my-auto font-bold text-sm text-slate-600 dark:text-slate-200">
+                <div className='flex flex-row justify-between w-full dark:text-slate-300'>
+                    <div className="my-auto text-sm font-bold text-slate-600 dark:text-slate-200">
                         {row.name}
                     </div>
                     {!isAdmin ? <></> : (
@@ -81,13 +81,13 @@ export default function ScheduleTable({ ...props }) {
         columns.push(
             {
                 name: (
-                    <div className="font-bold text-sm dark:text-slate-300">
+                    <div className="text-sm font-bold dark:text-slate-300">
                         {d}
                     </div>
                 ),
                 center: true,
                 cell: (row: any) => (
-                    <div className="rounded-xl px-2 font-bold text-white text-xs" style={{ backgroundColor: row['shift'][d - 1]["color"] }} >
+                    <div className="px-2 text-xs font-bold text-white rounded-xl" style={{ backgroundColor: row['shift'][d - 1]["color"] }} >
                         <div className="text-center">{row['shift'][d - 1]["st_alias"]}</div>
                         <div className="text-center">{row['shift'][d - 1]["ca_alias"] ? "(" + row['shift'][d - 1]["ca_alias"] + ")" : ""}</div>
                     </div>
@@ -116,6 +116,8 @@ export default function ScheduleTable({ ...props }) {
             data={filteredItems}
             responsive
             pagination
+            paginationPerPage={20}
+            paginationRowsPerPageOptions={[20, 25, 30]}
             persistTableHead
             paginationResetDefaultPage={props.resetPaginationToggle}
             theme={theme ? theme : undefined}

@@ -142,13 +142,14 @@ const verify = (req: any, res: any, next: any) => {
     }
 };
 
-// Re-authenticate if server restart
+// Re-authenticate if server restart (Not working)
+/*
 app.post('/api/auth', async (req, res) => {
     const accessToken = req.body.accessToken;
     const refreshToken = req.body.refreshToken;
     const decodedToken: any = jwt.decode(accessToken);
 
-    if (!refreshTokens) {
+    if (!refreshTokens.includes(refreshToken)) {
         const user = {
             id: decodedToken.id,
             isAdmin: decodedToken.isAdmin,
@@ -162,14 +163,11 @@ app.post('/api/auth', async (req, res) => {
             newAccessToken,
             newRefreshToken,
         });
-    } else {
-        if (!refreshTokens.includes(refreshToken)) {
-            return res.status(403).json("Refresh token is not valid!");
-        }
     }
 });
+*/
 
-app.get('/api/authCheck', (req, res) => {
+app.get('/api/auths' , (req, res) => {
     return res.json(refreshTokens.length);
 })
 
