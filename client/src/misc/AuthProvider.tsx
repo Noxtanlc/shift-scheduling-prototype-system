@@ -73,6 +73,9 @@ export default function AuthProvider({ children }: any) {
     }
     catch (err) {
       console.log(err);
+      removeToken();
+      removeUser();
+      return <Navigate to='/login' replace />
     }
   };
 

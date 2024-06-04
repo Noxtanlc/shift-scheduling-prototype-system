@@ -1,10 +1,10 @@
 import { useAuth } from "@/misc/AuthProvider";
-import { ActionIcon, TextInput, ColorInput, Switch, Button } from "@mantine/core";
+import { ActionIcon, TextInput, ColorInput, Switch, Button, Fieldset } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import * as icon from "react-icons/bs";
 
 export default function ShiftCategoryForm({ ...props }) {
@@ -18,6 +18,7 @@ export default function ShiftCategoryForm({ ...props }) {
         active: boolean | undefined;
     }
     const { token, axiosJWT } = useAuth();
+    const [formDisabled, setFormDisabled] = useState(false);
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["ShiftCategoryForm"],
@@ -31,7 +32,10 @@ export default function ShiftCategoryForm({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res:any) => {
+        onMutate: () => {
+            setFormDisabled(true);
+        },
+        onSuccess: async (res: any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['shiftCategory'],
                 refetchType: 'all',
@@ -50,8 +54,10 @@ export default function ShiftCategoryForm({ ...props }) {
             });
             props.handler.close();
             mutation.reset();
+            setFormDisabled(false);
         },
         onError: (res: any) => {
+            setFormDisabled(false);
             props.setUpdate(!props.update);
             props.setNotification({
                 action: action,
@@ -118,64 +124,66 @@ export default function ShiftCategoryForm({ ...props }) {
 
     return (
         <form onSubmit={form.onSubmit((values: any) => mutation.mutate(values))}>
-            <TextInput
-                required
-                label="Template Name"
-                placeholder="Enter shift template name"
-                {...form.getInputProps('name')}
-            />
-            <TextInput
-                required
-                label="Alias/Code"
-                placeholder="Enter alias/code"
-                {...form.getInputProps('alias')}
-            />
-            <ColorInput
-                label="Color Code"
-                description="Select color code for template"
-                placeholder="Select Color"
-                {...form.getInputProps('color')}
-            />
-            <div className="mb-3 md:flex md:flex-row md:gap-2">
-                <TimeInput
-                    ref={sdRef}
-                    leftSection={pickerControl(sdRef)}
-                    label="Start Time"
-                    description="Shift Starting Time"
-                    placeholder="Select/Enter start time"
-                    withSeconds={false}
-                    {...form.getInputProps('start_time')}
+            <Fieldset disabled={formDisabled} variant="unstyled">
+                <TextInput
+                    required
+                    label="Template Name"
+                    placeholder="Enter shift template name"
+                    {...form.getInputProps('name')}
                 />
-                <TimeInput
-                    ref={edRef}
-                    leftSection={pickerControl(edRef)}
-                    label="End Time"
-                    description="Shift Ending Time"
-                    placeholder="Select/Enter end time"
-                    withSeconds={false}
-                    {...form.getInputProps('end_time')}
+                <TextInput
+                    required
+                    label="Alias/Code"
+                    placeholder="Enter alias/code"
+                    {...form.getInputProps('alias')}
                 />
-            </div>
-            <Switch
-                labelPosition="left"
-                onLabel="ACTIVE"
-                offLabel="DISABLE"
-                label="Status: "
-                checked={form.values.active}
-                onChange={() => {
-                    form.setValues(
-                        { active: !form.values.active }
-                    )
-                }
-                }
-            />
-            <div className="flex justify-end flex-1 mt-6">
-                <Button
-                    type='submit'
-                >
-                    Submit
-                </Button>
-            </div>
+                <ColorInput
+                    label="Color Code"
+                    description="Select color code for template"
+                    placeholder="Select Color"
+                    {...form.getInputProps('color')}
+                />
+                <div className="mb-3 md:flex md:flex-row md:gap-2">
+                    <TimeInput
+                        ref={sdRef}
+                        leftSection={pickerControl(sdRef)}
+                        label="Start Time"
+                        description="Shift Starting Time"
+                        placeholder="Select/Enter start time"
+                        withSeconds={false}
+                        {...form.getInputProps('start_time')}
+                    />
+                    <TimeInput
+                        ref={edRef}
+                        leftSection={pickerControl(edRef)}
+                        label="End Time"
+                        description="Shift Ending Time"
+                        placeholder="Select/Enter end time"
+                        withSeconds={false}
+                        {...form.getInputProps('end_time')}
+                    />
+                </div>
+                <Switch
+                    labelPosition="left"
+                    onLabel="ACTIVE"
+                    offLabel="DISABLE"
+                    label="Status: "
+                    checked={form.values.active}
+                    onChange={() => {
+                        form.setValues(
+                            { active: !form.values.active }
+                        )
+                    }
+                    }
+                />
+                <div className="flex justify-end flex-1 mt-6">
+                    <Button
+                        type='submit'
+                    >
+                        Submit
+                    </Button>
+                </div>
+            </Fieldset>
         </form>
     )
 }

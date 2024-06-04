@@ -9,8 +9,8 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { TbAsterisk, TbDownload } from "react-icons/tb";
 import { modals } from "@mantine/modals";
-import { getShiftCategory } from "@/api";
 import { useAuth } from "@/misc/AuthProvider";
+import { fetchQueryApi } from "@/misc/FetchDataApi";
 
 dayjs.extend(customParseFormat);
 
@@ -26,10 +26,8 @@ const addNotes = {
 export default function ImportForm({ ...props }) {
     const queryClient = useQueryClient();
     const { token, axiosJWT } = useAuth();
-    const staff = props.staff;
-    const shiftCategory:any = useQuery({
-        queryKey: ['shiftCategory']
-    }).data;
+    const {staff, shiftCategory} = fetchQueryApi();
+    
     const openDeleteModal = () =>
         modals.openConfirmModal({
             title: (<div className="font-bold">Import CSV</div>),
@@ -59,7 +57,7 @@ export default function ImportForm({ ...props }) {
             array.fields.push(i.toString());
         }
 
-        staff.forEach((ele: any) => {
+        (staff['data'] as any).forEach((ele: any) => {
             let arr: any = [];
             arr.push(ele.name);
             arr.push(ele.staff_id);
@@ -304,7 +302,7 @@ export default function ImportForm({ ...props }) {
                             {"If needed, shift category can be exported at "}
                             <a className="font-bold underline underline-offset-2 hover:text-sky-500 transition ease-in duration-[50]" href="/shift-category" target="_blank">Shift Category</a>
                             {" or clicking "}
-                            <CSVLink className="font-bold underline underline-offset-2 hover:text-sky-500 transition ease-in duration-[50]" data={shiftCategory} filename="shift_category.csv">here</CSVLink>
+                            <CSVLink className="font-bold underline underline-offset-2 hover:text-sky-500 transition ease-in duration-[50]" data={shiftCategory.data as any ?? []} filename="shift_category.csv">here</CSVLink>
                             {" for reference."}
                         </div>
 

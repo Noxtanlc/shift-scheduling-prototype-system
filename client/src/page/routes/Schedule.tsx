@@ -3,20 +3,14 @@ import { CustomDataScroller } from "@/components/DataDisplay/Datascroller";
 import { Button, CloseButton, NativeSelect } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState, useReducer, useEffect, useMemo } from "react";
-import {
-    getAssignedStaff,
-    getGroup,
-    getShiftData,
-    getShiftCategory,
-    getStaff,
-} from "@/api";
 import { ScheduleTable } from "@/components/DataDisplay/";
 import { ScheduleData } from "@/misc/ScheduleData";
 import Modal from "@/components/Modal";
 import { ImportForm } from "@/components/Form";
-import { useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutationState, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useAuth } from "../../misc/AuthProvider";
+import { fetchQueryApi } from "@/misc/FetchDataApi";
 
 interface initial {
     title: string | undefined;
@@ -63,7 +57,7 @@ const initialModalProps: initial = {
 export default function Schedule() {
     const { user, token } = useAuth();
     const isAdmin = user.isAdmin;
-    const queryClient = useQueryClient();
+
     const scheduleFormMutation = useMutationState({
         filters: {
             mutationKey: ["scheduleForm"],
@@ -88,30 +82,7 @@ export default function Schedule() {
         response: "",
     };
 
-    const shift = queryClient.getQueryData(['shift']) ?? useQuery({
-        ...getShiftData(token.accessToken),
-        initialData: queryClient.getQueryData(['shift']),
-    }).data ?? [];
-    
-    const group: any = useQuery({
-        ...getGroup(token.accessToken),
-        initialData: queryClient.getQueryData(['group']),
-    }).data ?? [];
-
-    const assigned_staff: any = useQuery({
-        ...getAssignedStaff(token.accessToken),
-        initialData: queryClient.getQueryData(['assigned_staff']),
-    }).data ?? [];
-
-    const staff: any = useQuery({
-        ...getStaff(),
-        initialData: queryClient.getQueryData(['staff']),
-    }).data ?? [];
-
-    const shiftCategory: any = useQuery({
-        ...getShiftCategory(token.accessToken),
-        initialData: queryClient.getQueryData(['shiftCategory']),
-    }).data ?? [];
+    const {shift, staff, group, assigned_staff, shiftCategory} = fetchQueryApi();
 
     const date = new Date();
     const [pickerValue, setPickerValue] = useState<Date | null>(
@@ -152,23 +123,27 @@ export default function Schedule() {
     const [groupFilter, setGroupFilter] = useState("0");
 
     const data = useMemo(
-        () => ScheduleData(dateValue, staff, shift),
-        [dateValue, shift]
+        () => ScheduleData(dateValue, staff.data, shift.data),
+        [dateValue, shift.data]
     );
 
-    const selectVal: any = [
-        {
-            value: "0",
-            label: "All",
-        },
-    ];
+    const groupSelect = useMemo(() => {
+        const initial = [
+            {
+                value: "0",
+                label: "All",
+            },
+        ];
 
-    group.map((row: any) => {
-        selectVal.push({
-            value: row["groupID"].toString(),
-            label: row["groupName"],
-        });
-    });
+        group.data ? (group['data'] as any).map((row: any) => {
+            initial.push({
+                value: row["groupID"].toString(),
+                label: row["groupName"],
+            });
+        }) : {};
+        
+        return initial;
+    }, [group.data])
 
     const filteredData = useMemo(
         () =>
@@ -177,7 +152,7 @@ export default function Schedule() {
                 if (groupFilter === "0") {
                     return ele;
                 } else {
-                    if (assigned_staff.find((asEle: any) => asEle.groupID === filter && asEle.staffID === ele.staff_id)) return ele;
+                    if ((assigned_staff.data as any).find((asEle: any) => asEle.groupID === filter && asEle.staffID === ele.staff_id)) return ele;
                 }
             }),
         [groupFilter, data]
@@ -326,7 +301,7 @@ export default function Schedule() {
                                         rightSectionPointerEvents="auto"
                                         size="sm"
                                         label="Group"
-                                        data={selectVal}
+                                        data={groupSelect as any}
                                         onChange={(event:any) =>
                                             setGroupFilter(event.currentTarget.value)
                                         }
@@ -365,7 +340,7 @@ export default function Schedule() {
                         </div>
                     </div>
                     <div className="order-1 w-full text-xs shadow lg:order-2 lg:w-1/2 shadow-1">
-                        <CustomDataScroller data={shiftCategory} />
+                        <CustomDataScroller data={shiftCategory.data} />
                     </div>
                 </div>
                 <div className="bg-white scheduleTable dark:bg-slate-700">

@@ -1,8 +1,8 @@
 import { useAuth } from "@/misc/AuthProvider";
-import { TextInput, Button } from "@mantine/core";
+import { TextInput, Button, Fieldset } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 
 export default function LocationForm({ ...props }) {
     interface LocationFormValue {
@@ -10,8 +10,11 @@ export default function LocationForm({ ...props }) {
         ca_name: string;
         ca_desc: string;
     }
+    const [formDisabled, setFormDisabled] = useState(false);
     const { token, axiosJWT } = useAuth();
-    const queryClient = useQueryClient();
+    const locationQuery = useQuery({
+        queryKey: ['location'],
+    });
     const mutation = useMutation({
         mutationKey: ["locationForm"],
         mutationFn: (formData: LocationFormValue) => {
@@ -24,12 +27,11 @@ export default function LocationForm({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res:any) => {
-            await queryClient.invalidateQueries({
-                queryKey: ['location'],
-                refetchType: 'all',
-            });
-
+        onMutate: () => {
+            setFormDisabled(true);
+        },
+        onSuccess: (res: any) => {
+            locationQuery.refetch();
             props.setUpdate(!props.update);
             props.setNotification({
                 action: action,
@@ -37,6 +39,7 @@ export default function LocationForm({ ...props }) {
                 response: res.data.response
             });
             props.handler.close();
+            setFormDisabled(false);
             mutation.reset();
         },
         onError: (res: any) => {
@@ -46,6 +49,7 @@ export default function LocationForm({ ...props }) {
                 title: res.data.title,
             });
             props.handler.close();
+            setFormDisabled(false);
             mutation.reset();
         },
     });
@@ -76,24 +80,26 @@ export default function LocationForm({ ...props }) {
             form.onSubmit((values: any) => mutation.mutate(values))
         }
         >
-            <TextInput
-                required
-                label="Alias"
-                placeholder="Enter location code/name"
-                {...form.getInputProps('ca_name')}
-            />
-            <TextInput
-                label="Description"
-                placeholder="Enter location description"
-                {...form.getInputProps('ca_desc')}
-            />
-            <div className="flex justify-end flex-1 mt-3">
-                <Button
-                    type='submit'
-                >
-                    Submit
-                </Button>
-            </div>
+            <Fieldset disabled={formDisabled} variant="unstyled">
+                <TextInput
+                    required
+                    label="Alias"
+                    placeholder="Enter location code/name"
+                    {...form.getInputProps('ca_name')}
+                />
+                <TextInput
+                    label="Description"
+                    placeholder="Enter location description"
+                    {...form.getInputProps('ca_desc')}
+                />
+                <div className="flex justify-end flex-1 mt-3">
+                    <Button
+                        type='submit'
+                    >
+                        Submit
+                    </Button>
+                </div>
+            </Fieldset>
         </form>
     )
 }

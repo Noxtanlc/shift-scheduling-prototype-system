@@ -5,12 +5,11 @@ import { GroupTable } from "../../components/DataDisplay";
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BsPlusCircle } from "react-icons/bs";
 import { GroupForm } from "@/components/Form";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/misc/AuthProvider";
-import { getAssignedStaff, getGroup, getStaff } from "@/api";
+import { assigned_staffQuery, fetchQueryApi, groupQuery, staffQuery } from "@/misc/FetchDataApi";
 
 export async function queryFunction() {
     const response = await axios.get("http://127.0.0.1:3001/api/group");
@@ -64,7 +63,6 @@ function organiseData(groupArr: any, asArr: any) {
 }
 
 export default function GroupPage() {
-    const queryClient = useQueryClient();
     const { token } = useAuth();
     const ModalInitialState: {
         action: string | undefined,
@@ -91,19 +89,9 @@ export default function GroupPage() {
         }
     });
 
-    const staff = queryClient.getQueryData(['staff']) ?? useQuery({
-        ...getStaff(token.accessToken),
-    }).data;;
+    const { staff, group, assigned_staff } = fetchQueryApi();
 
-    const group = queryClient.getQueryData(['group']) ?? useQuery({
-        ...getGroup(token.accessToken),
-    }).data;
-
-    const assigned_staff = queryClient.getQueryData(['assignedStaff']) ?? useQuery({
-        ...getAssignedStaff(token.accessToken),
-    }).data;
-
-    const GroupArray = useMemo(() => organiseData(group, assigned_staff), [group, assigned_staff]);
+    const GroupArray = useMemo(() => organiseData(group.data, assigned_staff.data), [group.data, assigned_staff.data]);
 
     function handleModalClick(action: any, title: string | undefined, data?: any) {
         dispatch({

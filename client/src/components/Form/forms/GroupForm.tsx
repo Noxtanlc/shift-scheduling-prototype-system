@@ -1,9 +1,9 @@
-import { getStaff } from "@/api";
 import { useAuth } from "@/misc/AuthProvider";
-import { TextInput, MultiSelect, Button } from "@mantine/core";
+import { groupQuery } from "@/misc/FetchDataApi";
+import { TextInput, MultiSelect, Button, Fieldset } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useQueryClient, useMutation, useQuery, useQueries } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 
 export default function GroupForm({ ...props }) {
     interface GroupFormValue {
@@ -12,12 +12,19 @@ export default function GroupForm({ ...props }) {
         selectedStaff: [];
         originalSelectedStaff: [];
     }
-    const queryClient = useQueryClient();
     const { token, axiosJWT } = useAuth();
-    const staffList: any = useQuery({
-        ...getStaff(token.accessToken),
-        initialData: queryClient.getQueryData(['staff'])
-    }).data;
+    const [formDisabled, setFormDisabled] = useState(false);
+    const staffList = useQuery({
+        queryKey: ['staff']
+    });
+
+    const group = useQuery({
+        queryKey: ['group']
+    });
+
+    const assigned_staff = useQuery({
+        queryKey: ['assigned_staff']
+    })
 
     const action = props.action;
     const data = props.data;
@@ -40,12 +47,12 @@ export default function GroupForm({ ...props }) {
         }
     }
 
-    staffList ? staffList.map((ele: any) => {
+    staffList ? (staffList.data as any).map((ele: any) => {
         staffSelection.push({
             value: ele['staff_id'].toString(),
             label: ele['name'],
         })
-    }) : undefined;
+    }) : {};
 
     const mutation = useMutation({
         mutationKey: ["groupForm"],
@@ -59,17 +66,13 @@ export default function GroupForm({ ...props }) {
                 }
             })
         },
+        onMutate: () => {
+            setFormDisabled(true);
+        },
         onSuccess: async (res: any) => {
-            await queryClient.invalidateQueries({
-                queryKey: ['group'],
-                refetchType: 'all',
-            });
-
-            await queryClient.invalidateQueries({
-                queryKey: ['assigned_staff'],
-                refetchType: 'all',
-            });
-
+            group.refetch();
+            assigned_staff.refetch();
+            setFormDisabled(false);
             props.setUpdate(!props.update);
             props.setNotification({
                 action: action,
@@ -80,6 +83,7 @@ export default function GroupForm({ ...props }) {
             mutation.reset();
         },
         onError: (res: any) => {
+            setFormDisabled(false);
             props.setUpdate(!props.update);
             props.setNotification({
                 action: action,
@@ -114,29 +118,31 @@ export default function GroupForm({ ...props }) {
         <form
             onSubmit={form.onSubmit((values) => mutation.mutate(values))}
         >
-            <TextInput
-                required
-                label="Group Name"
-                placeholder="Enter group name..."
-                {...form.getInputProps('groupName')}
-            />
-            <MultiSelect
-                mt={16}
-                label="Employee"
-                placeholder="Select employee..."
-                data={staffSelection}
-                searchable
-                clearable
-                maxDropdownHeight={120}
-                {...form.getInputProps('selectedStaff')}
-            />
-            <div className="flex justify-end flex-1 mt-3">
-                <Button
-                    type='submit'
-                >
-                    Submit
-                </Button>
-            </div>
+            <Fieldset disabled={formDisabled} variant='unstyled'>
+                <TextInput
+                    required
+                    label="Group Name"
+                    placeholder="Enter group name..."
+                    {...form.getInputProps('groupName')}
+                />
+                <MultiSelect
+                    mt={16}
+                    label="Employee"
+                    placeholder="Select employee..."
+                    data={staffSelection}
+                    searchable
+                    clearable
+                    maxDropdownHeight={120}
+                    {...form.getInputProps('selectedStaff')}
+                />
+                <div className="flex justify-end flex-1 mt-3">
+                    <Button
+                        type='submit'
+                    >
+                        Submit
+                    </Button>
+                </div>
+            </Fieldset>
         </form>
     )
 }

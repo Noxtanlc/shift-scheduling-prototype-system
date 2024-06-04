@@ -9,6 +9,7 @@ import { useAuth } from "@/misc/AuthProvider";
 
 export default function GroupTable({ ...props }) {
     const { token, axiosJWT } = useAuth();
+    const [disabled, setDisabled] = useState(false);
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationKey: ["groupForm"],
@@ -22,7 +23,10 @@ export default function GroupTable({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res:any) => {
+        onMutate: () => {
+            setDisabled(true);
+        },
+        onSuccess: async (res: any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['group'],
                 refetchType: 'all',
@@ -39,6 +43,7 @@ export default function GroupTable({ ...props }) {
                 title: res.data.title,
                 message: res.data.message
             });
+            setDisabled(false);
         },
     });
     const [pending, setPending] = useState(true);
@@ -96,6 +101,7 @@ export default function GroupTable({ ...props }) {
                 <div className="flex flex-col justify-between my-1 lg:flex-row lg:my-0">
                     <div className='mx-auto'>
                         <Button
+                            disabled={disabled}
                             variant="transparent"
                             id='actionBtn'
                             onClick={() => {
@@ -109,6 +115,7 @@ export default function GroupTable({ ...props }) {
                     </div>
                     <div className='mx-auto'>
                         <Button
+                            disabled={disabled}
                             variant="transparent"
                             id='actionBtn'
                             onClick={() => {

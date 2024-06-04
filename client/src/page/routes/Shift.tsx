@@ -5,11 +5,13 @@ import * as Icon from 'react-bootstrap-icons';
 import { notifications } from "@mantine/notifications";
 import { getShiftCategory } from "@/api";
 import { ShiftCategoryTable } from "@/components/DataDisplay";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import Modal from "@/components/Modal";
 import { ShiftCategoryForm } from "@/components/Form";
 import { CSVLink } from "react-csv";
 import { TbDownload } from "react-icons/tb";
+import { fetchQueryApi } from "@/misc/FetchDataApi";
+import { useAuth } from "@/misc/AuthProvider";
 
 interface initial {
     title: string | undefined;
@@ -51,13 +53,12 @@ const initialState: initial = {
 }
 
 export default function ShiftType() {
-    const queryClient = useQueryClient();
-
     const InitialNotification: any = {
         action: '',
         title: '',
         response: '',
     };
+
     const [notification, setNotification] = useState(InitialNotification);
     const [opened, handler] = useDisclosure(false, {
         onClose: () => {
@@ -67,14 +68,12 @@ export default function ShiftType() {
         }
     });
     const [update, setUpdate] = useState(false);
-    var stData:any = queryClient.getQueryData(['shiftCategory']) ?? useQuery({
-        ...getShiftCategory(),
-    });
+    const { shiftCategory } = fetchQueryApi();
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const CSVExport = () => (
-        <CSVLink data={stData ?? []} filename={"shift_category.csv"}>
-            <Button 
+        <CSVLink data={shiftCategory.data as any ?? []} filename={"shift_category.csv"}>
+            <Button
                 leftSection={<TbDownload size={16} />}
                 color={"lime"}
             >
@@ -190,7 +189,7 @@ export default function ShiftType() {
                     </Button>
                 </div>
                 <ShiftCategoryTable
-                    data={stData}
+                    data={shiftCategory.data}
                     opened={opened}
                     modalHandler={modalHandler}
                     handler={handler}

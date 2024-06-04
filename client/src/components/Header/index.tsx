@@ -36,7 +36,7 @@ export default function Header({ ...props }) {
             notifications.show({
                 id: 'logout',
                 withCloseButton: true,
-                autoClose: 1500,
+                autoClose: 2000,
                 title: "Logging out",
                 message: 'Logging out of application...',
                 color: 'cyan',
@@ -48,7 +48,7 @@ export default function Header({ ...props }) {
                 setToken();
                 navigate('/login', { replace: true });
                 queryClient.removeQueries();
-            }, 3 * 1000);
+            }, 2 * 1000);
         }).catch((err: any) => console.log(err));
     };
 

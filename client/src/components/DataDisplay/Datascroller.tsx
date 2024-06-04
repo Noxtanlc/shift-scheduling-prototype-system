@@ -2,23 +2,24 @@ import { ScrollArea, Table } from "@mantine/core";
 import { useMemo } from "react";
 
 export function CustomDataScroller({ ...props }) {
-    const data = useMemo(() => props.data, [props.data]);
+    const data: any = props.data;
 
-    const rows = data.map((ele: any) => (
-        <Table.Tr key={ele.id}>
-            <Table.Td className="text-center">
-                <div className="px-2 font-bold text-white rounded-xl" 
-                style={{ 
-                    backgroundColor: ele['color-coding'],
-                    color: ele['color-coding'] === '#ffffff' ? 'black' : undefined
-                }}
-                >
-                    {ele.st_alias}
-                </div>
-            </Table.Td>
-            <Table.Td className="font-semibold">{ele.st_name}</Table.Td>
-        </Table.Tr>
-    ));
+    const rows = useMemo(() =>
+        data ? data.map((ele: any) => (
+            <Table.Tr key={ele.id}>
+                <Table.Td className="text-center">
+                    <div className="px-2 font-bold text-white rounded-xl"
+                        style={{
+                            backgroundColor: ele['color-coding'],
+                            color: ele['color-coding'] === '#ffffff' ? 'black' : undefined
+                        }}
+                    >
+                        {ele.st_alias}
+                    </div>
+                </Table.Td>
+                <Table.Td className="font-semibold">{ele.st_name}</Table.Td>
+            </Table.Tr>
+        )) : [], [data]);
 
     return (
         <div className="drop-shadow-lg">

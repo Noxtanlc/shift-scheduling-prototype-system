@@ -6,8 +6,8 @@ import * as Icon from 'react-icons/bs';
 import { notifications } from "@mantine/notifications";
 import { LocationForm } from "@/components/Form";
 import Modal from "@/components/Modal";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getLocation } from "@/api";
+import { locationQuery } from "@/misc/FetchDataApi";
+import { useAuth } from "@/misc/AuthProvider";
 
 interface InitialNotification {
     action: string,
@@ -47,7 +47,7 @@ const initialState: initial = {
 }
 
 export default function Location() {
-    const queryClient = useQueryClient();
+    const { token } = useAuth();
     const InitialNotification: any = {
         action: '',
         title: '',
@@ -65,9 +65,7 @@ export default function Location() {
 
     const [update, setUpdate] = useState(false);
     
-    const data = queryClient.getQueryData(['location']) ?? useQuery({
-        ...getLocation(),
-    }).data ?? [];
+    const data = locationQuery(token.accessToken)
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -183,7 +181,7 @@ export default function Location() {
                         </Button>
                     </div>
                     <LocationTable
-                        data={data}
+                        data={data.data}
                         opened={opened}
                         modalHandler={modalHandler}
                         handler={handler}

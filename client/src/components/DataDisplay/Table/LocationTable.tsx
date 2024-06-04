@@ -2,13 +2,17 @@ import { useAuth } from "@/misc/AuthProvider";
 import { useTheme } from "@/misc/ThemeProvider";
 import { Button, Loader } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import * as icon from "react-icons/bs"
 
 export default function LocationTable({ ...props }) {
     const { token, axiosJWT } = useAuth();
-    const queryClient = useQueryClient();
+    const [disabled, setDisabled] = useState(false);
+    const locationQuery = useQuery({
+        queryKey: ['location'],
+    });
     const mutation = useMutation({
         mutationKey: ["locationForm"],
         mutationFn: (data: any) => {
@@ -21,17 +25,18 @@ export default function LocationTable({ ...props }) {
                 }
             })
         },
-        onSuccess: async (res:any) => {
-            await queryClient.invalidateQueries({
-                queryKey: ['location'],
-                refetchType: 'all',
-            });
+        onMutate: () => {
+            setDisabled(true);
+        },
+        onSuccess: (res:any) => {
+            locationQuery.refetch();
             props.setUpdate(!props.update);
             props.setNotification({
                 action: 'Delete',
                 title: res.data.title,
                 message: res.data.message
             });
+            setDisabled(false);
         },
     });
 
@@ -46,7 +51,7 @@ export default function LocationTable({ ...props }) {
         ),
         labels: { confirm: 'Confirm', cancel: 'Cancel' },
         onConfirm: async () => {
-            mutation.mutate(value)
+            mutation.mutate(value);
         },
     });
 
@@ -78,6 +83,7 @@ export default function LocationTable({ ...props }) {
                 <div className="flex flex-col justify-between md:flex-row lg:my-1">
                     <div className='mx-auto'>
                         <Button
+                            disabled={disabled}
                             variant="transparent"
                             id='actionBtn'
                             onClick={() => {
@@ -90,6 +96,7 @@ export default function LocationTable({ ...props }) {
                     </div>
                     <div className='mx-auto'>
                         <Button
+                            disabled={disabled}
                             variant="transparent"
                             id='actionBtn'
                             onClick={() => {

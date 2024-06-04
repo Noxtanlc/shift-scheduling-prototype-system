@@ -17,7 +17,6 @@ const slideRight = {
   transitionProperty: "margin-left, opacity",
 };
 
-
 export default function DefaultLayout() {
   const { user } = useAuth();
   const isAdmin = user.isAdmin;

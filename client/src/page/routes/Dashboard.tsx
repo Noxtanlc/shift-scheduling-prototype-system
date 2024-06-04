@@ -3,16 +3,15 @@ import { useMemo, useState } from "react";
 import MonthPicker from "@/components/Datepicker/CustomMonthPicker";
 import { Button, Tooltip } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { useQueries } from "@tanstack/react-query";
 import { ScheduleData } from "@/misc/ScheduleData";
 import { DashboardTable } from "@/components/DataDisplay";
 import { useAuth } from "@/misc/AuthProvider";
 import { shiftList } from "@/types";
+import { fetchQueryApi } from "@/misc/FetchDataApi";
 
 export default function Dashboard() {
     const { user } = useAuth();
     const isAdmin = user.isAdmin;
-    var data: shiftList[] = [];
     const date = new Date();
     const [pickerValue, setPickerValue] = useState<Date | null>(
         new Date(date.getFullYear(), date.getMonth(), 1)
@@ -29,17 +28,9 @@ export default function Dashboard() {
         };
     }, [pickerValue]);
 
-    var fetch = useQueries({
-        queries: [
-            {
-                queryKey: ['staff']
-            },
-            {
-                queryKey: ['shift']
-            },
-        ]
-    })
-    data = ScheduleData(dateValue, fetch[0].data, fetch[1].data);
+    const {staff, shift} = fetchQueryApi();
+
+    const data: shiftList[] = ScheduleData(dateValue, staff.data, shift.data) ?? [];
 
     return (
         <div key="dashboard" className="flex flex-col flex-1 p-2">
