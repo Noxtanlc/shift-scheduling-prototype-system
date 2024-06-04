@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import { Button, Input, PasswordInput, Image, TextInput } from "@mantine/core";
+import { Button, PasswordInput, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
@@ -7,10 +7,11 @@ import { useAuth } from "../../misc/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { notifications } from "@mantine/notifications";
-import { TbCheck, TbCopyright } from "react-icons/tb";
+import { TbCheck } from "react-icons/tb";
 
 export default function Login() {
-    const { setToken, setUser } = useAuth();
+    const { token, setToken, setUser } = useAuth();
+
     const [error, setError] = useState({
         errInput: '',
         msg: '',
@@ -84,7 +85,7 @@ export default function Login() {
                     'password', error.msg
                 );
             }
-            
+
             mutation.reset();
         }
     }, [mutation.isError])

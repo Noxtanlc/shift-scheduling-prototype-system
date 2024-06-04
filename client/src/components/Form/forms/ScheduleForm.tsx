@@ -8,7 +8,6 @@ import { shiftList } from "@/types";
 import { notifications } from "@mantine/notifications";
 import { getShiftCategory, getShiftData, getStaff, getLocation } from "@/api";
 import { CustomMonthPicker } from "@/components/Datepicker";
-import axios from "axios";
 import dayjs from "dayjs";
 import { useAuth } from "@/misc/AuthProvider";
 
@@ -239,11 +238,11 @@ export default function ScheduleForm({ ...props }) {
 
     const st_select: any = [{
         label: 'Select',
-        value: null,
+        value: 0,
     }];
     const ca_select: any = [{
-        label: 'Select',
-        value: null,
+        label: 'None',
+        value: 0,
     }];
 
     st.map((ele: any) => {
@@ -252,6 +251,7 @@ export default function ScheduleForm({ ...props }) {
             value: ele.id,
         });
     });
+    
     location.map((ele: any) => {
         ca_select.push({
             label: ele.ca_alias,
@@ -327,6 +327,7 @@ export default function ScheduleForm({ ...props }) {
                 title: res.data.title,
                 response: res.data.response,
             });
+            setAction('add');
         },
     });
 
@@ -335,7 +336,7 @@ export default function ScheduleForm({ ...props }) {
             shift = queryClient.getQueryData(['shift']);
             mutation.reset();
             form.setInitialValues(initialValues);
-            setAction('');
+            setAction('add');
             form.reset();
         }
     }, [mutation.status]);
