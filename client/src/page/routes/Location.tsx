@@ -64,11 +64,11 @@ export default function Location() {
     });
 
     const [update, setUpdate] = useState(false);
-    const data = useQuery({
+    
+    const data = queryClient.getQueryData(['location']) ?? useQuery({
         ...getLocation(),
-        enabled: true,
-        initialData: queryClient.getQueryData(['location'])
-    }).data;
+    }).data ?? [];
+
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const modalHandler = (action: any, title?: string | undefined, data?: any) => {

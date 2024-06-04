@@ -97,5 +97,5 @@ export function FetchDataApi(queryClient: QueryClient, token?: any, isAdmin?:any
     fetchShiftCategory(queryClient, token)
     fetchLocation(queryClient, token)
     fetchGroup(queryClient, token)
-    fetchAssignedGroup(queryClient, token)
+    fetchAssignedGroup(queryClient, token);
 }

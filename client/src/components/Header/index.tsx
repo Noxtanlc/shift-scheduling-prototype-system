@@ -46,7 +46,7 @@ export default function Header({ ...props }) {
 
             setTimeout(() => {
                 setToken();
-                navigate('/', { replace: true });
+                navigate('/login', { replace: true });
                 queryClient.removeQueries();
             }, 3 * 1000);
         }).catch((err: any) => console.log(err));

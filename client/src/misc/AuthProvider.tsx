@@ -1,4 +1,3 @@
-import App from "@/App";
 import { readLocalStorageValue, useLocalStorage } from "@mantine/hooks";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -74,7 +73,6 @@ export default function AuthProvider({ children }: any) {
     }
     catch (err) {
       console.log(err);
-      <Navigate to='' replace />
     }
   };
 
@@ -90,7 +88,6 @@ export default function AuthProvider({ children }: any) {
         delete axios.defaults.headers.common["Authorization"];
         removeToken();
         removeUser();
-        <Navigate to='/' replace />
       }
     });
   }, []);
@@ -102,7 +99,7 @@ export default function AuthProvider({ children }: any) {
       delete axios.defaults.headers.common["Authorization"];
       removeToken();
       removeUser();
-      <Navigate to='/' replace />
+      <Navigate to='/login' replace />
     }
   }, [token.accessToken]);
 
@@ -121,7 +118,7 @@ export default function AuthProvider({ children }: any) {
     (error) => {
       removeToken();
       removeUser();
-      <Navigate to='/' replace />
+      <Navigate to='/login' replace />
       return Promise.reject(error)
     }
   );

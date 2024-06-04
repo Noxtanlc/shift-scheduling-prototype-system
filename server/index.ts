@@ -57,7 +57,7 @@ const generateAccessToken = (user: any) => {
         id: user.id,
         isAdmin: user.isAdmin,
     }, "loginKey", {
-        expiresIn: "5m",
+        expiresIn: "10s",
     });
 }
 

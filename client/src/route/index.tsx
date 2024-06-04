@@ -18,8 +18,6 @@ export default function Route() {
         },
     });
 
-    const { token } = useAuth();
-
     const authRoute = [
         {
             path: "/login",

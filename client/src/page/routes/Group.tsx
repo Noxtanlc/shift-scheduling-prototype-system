@@ -10,7 +10,7 @@ import { BsPlusCircle } from "react-icons/bs";
 import { GroupForm } from "@/components/Form";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/misc/AuthProvider";
-import { getAssignedStaff, getGroup } from "@/api";
+import { getAssignedStaff, getGroup, getStaff } from "@/api";
 
 export async function queryFunction() {
     const response = await axios.get("http://127.0.0.1:3001/api/group");
@@ -90,13 +90,16 @@ export default function GroupPage() {
             }
         }
     });
-    
-    let staff = queryClient.getQueryData(['staff']);
 
-    const group = useQuery({
+    const staff = queryClient.getQueryData(['staff']) ?? useQuery({
+        ...getStaff(token.accessToken),
+    }).data;;
+
+    const group = queryClient.getQueryData(['group']) ?? useQuery({
         ...getGroup(token.accessToken),
     }).data;
-    const assigned_staff = useQuery({
+
+    const assigned_staff = queryClient.getQueryData(['assignedStaff']) ?? useQuery({
         ...getAssignedStaff(token.accessToken),
     }).data;
 

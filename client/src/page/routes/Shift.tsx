@@ -69,12 +69,11 @@ export default function ShiftType() {
     const [update, setUpdate] = useState(false);
     var stData:any = queryClient.getQueryData(['shiftCategory']) ?? useQuery({
         ...getShiftCategory(),
-        enabled: false,
     });
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const CSVExport = () => (
-        <CSVLink data={stData} filename={"shift_category.csv"}>
+        <CSVLink data={stData ?? []} filename={"shift_category.csv"}>
             <Button 
                 leftSection={<TbDownload size={16} />}
                 color={"lime"}

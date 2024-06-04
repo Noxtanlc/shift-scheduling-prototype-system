@@ -88,34 +88,29 @@ export default function Schedule() {
         response: "",
     };
 
-    var shift = useQuery({
+    const shift = queryClient.getQueryData(['shift']) ?? useQuery({
         ...getShiftData(token.accessToken),
         initialData: queryClient.getQueryData(['shift']),
-        enabled: false,
     }).data ?? [];
     
     const group: any = useQuery({
         ...getGroup(token.accessToken),
         initialData: queryClient.getQueryData(['group']),
-        enabled: false,
     }).data ?? [];
 
     const assigned_staff: any = useQuery({
         ...getAssignedStaff(token.accessToken),
         initialData: queryClient.getQueryData(['assigned_staff']),
-        enabled: false,
     }).data ?? [];
 
     const staff: any = useQuery({
         ...getStaff(),
         initialData: queryClient.getQueryData(['staff']),
-        enabled: false,
     }).data ?? [];
 
     const shiftCategory: any = useQuery({
         ...getShiftCategory(token.accessToken),
         initialData: queryClient.getQueryData(['shiftCategory']),
-        enabled: false,
     }).data ?? [];
 
     const date = new Date();

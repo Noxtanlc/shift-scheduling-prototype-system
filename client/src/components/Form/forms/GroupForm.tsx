@@ -16,7 +16,6 @@ export default function GroupForm({ ...props }) {
     const { token, axiosJWT } = useAuth();
     const staffList: any = useQuery({
         ...getStaff(token.accessToken),
-        enabled: false,
         initialData: queryClient.getQueryData(['staff'])
     }).data;
 
@@ -41,12 +40,12 @@ export default function GroupForm({ ...props }) {
         }
     }
 
-    staffList.map((ele: any) => {
+    staffList ? staffList.map((ele: any) => {
         staffSelection.push({
             value: ele['staff_id'].toString(),
             label: ele['name'],
         })
-    });
+    }) : undefined;
 
     const mutation = useMutation({
         mutationKey: ["groupForm"],

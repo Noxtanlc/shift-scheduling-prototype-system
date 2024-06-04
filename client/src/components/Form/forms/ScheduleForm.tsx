@@ -209,22 +209,22 @@ export default function ScheduleForm({ ...props }) {
 
     var shift = useQuery({
         ...getShiftData(token.accessToken),
-        enabled: false,
-    }) ?? [];
+        initialData: queryClient.getQueryData(['shift']),
+    });
     
-    const staff: any = queryClient.getQueryData(['staff']) ?? useQuery({
+    const staff: any = useQuery({
         ...getStaff(token.accessToken),
-        enabled: false,
+        initialData: queryClient.getQueryData(['staff']),
     }).data;
 
-    const shiftCategory: any = queryClient.getQueryData(['shiftCategory']) ?? useQuery({
+    const shiftCategory: any = useQuery({
         ...getShiftCategory(token.accessToken),
-        enabled: false,
+        initialData: queryClient.getQueryData(['shiftCategory']),
     }).data;
 
-    let location: any = queryClient.getQueryData(['location']) ?? useQuery({
+    let location: any = useQuery({
         ...getLocation(token.accessToken),
-        enabled: false,
+        initialData: queryClient.getQueryData(['location']),
     }).data;
 
     const st = shiftCategory.filter((ele: any) => ele.active === 1)
@@ -241,10 +241,21 @@ export default function ScheduleForm({ ...props }) {
         label: 'Select',
         value: 0,
     }];
-    const ca_select: any = [{
-        label: 'None',
-        value: 0,
-    }];
+    const ca_select: any = useMemo(() => {
+        const initial =  [{
+            label: 'None',
+            value: 0,
+        }];
+
+        location ? location.map((ele: any) => {
+            initial.push({
+                label: ele.ca_alias,
+                value: ele.ca_id,
+            });
+        }) : {};
+
+        return initial;
+    }, [location]);
 
     st.map((ele: any) => {
         st_select.push({
@@ -253,12 +264,7 @@ export default function ScheduleForm({ ...props }) {
         });
     });
 
-    location.map((ele: any) => {
-        ca_select.push({
-            label: ele.ca_alias,
-            value: ele.ca_id,
-        });
-    });
+
 
     const [action, setAction] = useState('add');
     const sDateRef = useRef<HTMLInputElement>(null);

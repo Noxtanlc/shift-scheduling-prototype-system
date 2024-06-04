@@ -22,13 +22,13 @@ export default function Root() {
 
   useEffect(() => {
     if (!token.accessToken) {
-      navigate('/login', {replace: true});
+      navigate('/login', { replace: true });
     }
 
     if (pathname === '/login' && token.accessToken) {
-      navigate('/', {replace: true});
+      navigate('/', { replace: true });
     }
-  }, [token]);
+  }, [token.accessToken]);
 
   if (token.accessToken) {
     FetchDataApi(queryClient, token.accessToken, user.isAdmin);
