@@ -1,23 +1,13 @@
 import rootLoader from '@/common/loader';
 import ErrorPage from '@/404';
 import { Schedule, Location, Group, ShiftCategory, Dashboard, Login } from '@/page'
-import {Title} from '@/page';
+import { Title } from '@/page';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useAuth } from '@/misc/AuthProvider';
 import ThemeProvider from '@/misc/ThemeProvider';
 import Root from '@/root';
 import DefaultLayout from '@/layout';
 
 export default function Route() {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                staleTime: Infinity,
-            },
-        },
-    });
-
     const authRoute = [
         {
             path: "/login",
@@ -74,8 +64,6 @@ export default function Route() {
     ]);
 
     return (
-        <QueryClientProvider client={queryClient} >
-            <RouterProvider router={router} />
-        </QueryClientProvider>
+        <RouterProvider router={router} />
     )
 }

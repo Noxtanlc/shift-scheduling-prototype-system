@@ -9,6 +9,8 @@ import {
   useMemo,
 } from "react";
 import { Navigate } from "react-router-dom";
+import { prefetchApi } from "./FetchDataApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AuthContext = createContext<any>('');
 
@@ -17,6 +19,8 @@ export function useAuth() {
 };
 
 export default function AuthProvider({ children }: any) {
+  const queryClient = useQueryClient();
+
   const tokenValue = readLocalStorageValue({
     key: 'token',
     defaultValue: {
@@ -97,6 +101,7 @@ export default function AuthProvider({ children }: any) {
 
   useEffect(() => {
     if (token.accessToken) {
+      prefetchApi(queryClient, token.accessToken);
       axios.defaults.headers.common["Authorization"] = "Bearer " + token.accessToken;
     } else {
       delete axios.defaults.headers.common["Authorization"];

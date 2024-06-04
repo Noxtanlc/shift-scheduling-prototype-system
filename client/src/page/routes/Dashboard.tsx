@@ -7,7 +7,7 @@ import { ScheduleData } from "@/misc/ScheduleData";
 import { DashboardTable } from "@/components/DataDisplay";
 import { useAuth } from "@/misc/AuthProvider";
 import { shiftList } from "@/types";
-import { fetchQueryApi } from "@/misc/FetchDataApi";
+import { queriesApi } from "@/misc/FetchDataApi";
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -28,7 +28,7 @@ export default function Dashboard() {
         };
     }, [pickerValue]);
 
-    const {staff, shift} = fetchQueryApi();
+    const {staff, shift} = queriesApi();
 
     const data: shiftList[] = ScheduleData(dateValue, staff.data, shift.data) ?? [];
 

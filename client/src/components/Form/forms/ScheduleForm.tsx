@@ -1,15 +1,15 @@
 import { Button, Table, NativeSelect, Tooltip, Fieldset } from "@mantine/core";
 import { DateInput, DateInputProps } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ScheduleData } from "@/misc/ScheduleData";
 import { shiftList } from "@/types";
 import { notifications } from "@mantine/notifications";
-import { getShiftCategory, getShiftData, getStaff, getLocation } from "@/api";
 import { CustomMonthPicker } from "@/components/Datepicker";
 import dayjs from "dayjs";
 import { useAuth } from "@/misc/AuthProvider";
+import { queriesApi } from "@/misc/FetchDataApi";
 
 const dateParser: DateInputProps['dateParser'] = (input) => {
     return dayjs(input, 'DD/MM/YYYY').toDate();
@@ -207,27 +207,9 @@ export default function ScheduleForm({ ...props }) {
     const queryClient = useQueryClient();
     const { token, axiosJWT } = useAuth();
 
-    var shift = useQuery({
-        ...getShiftData(token.accessToken),
-        initialData: queryClient.getQueryData(['shift']),
-    });
-    
-    const staff: any = useQuery({
-        ...getStaff(token.accessToken),
-        initialData: queryClient.getQueryData(['staff']),
-    }).data;
+    const {shift, staff, shiftCategory, location} = queriesApi();
 
-    const shiftCategory: any = useQuery({
-        ...getShiftCategory(token.accessToken),
-        initialData: queryClient.getQueryData(['shiftCategory']),
-    }).data;
-
-    let location: any = useQuery({
-        ...getLocation(token.accessToken),
-        initialData: queryClient.getQueryData(['location']),
-    }).data;
-
-    const st = shiftCategory.filter((ele: any) => ele.active === 1)
+    const st = (shiftCategory.data as any).filter((ele: any) => ele.active === 1)
     const [pickerValue, setPickerValue] = useState<Date | null>(new Date(props.dateValue.year, props.dateValue.month - 1, 1));
     const dateValue = useMemo(() => {
         return {
@@ -247,7 +229,7 @@ export default function ScheduleForm({ ...props }) {
             value: 0,
         }];
 
-        location ? location.map((ele: any) => {
+        location.data ? (location.data as any).map((ele: any) => {
             initial.push({
                 label: ele.ca_alias,
                 value: ele.ca_id,
@@ -255,7 +237,7 @@ export default function ScheduleForm({ ...props }) {
         }) : {};
 
         return initial;
-    }, [location]);
+    }, [location.data]);
 
     st.map((ele: any) => {
         st_select.push({
@@ -354,7 +336,7 @@ export default function ScheduleForm({ ...props }) {
     }, [mutation.status]);
 
 
-    const filteredStaff = staff.filter((ele: any) => ele.staff_id === props.staff_id);
+    const filteredStaff = (staff.data as any).filter((ele: any) => ele.staff_id === props.staff_id);
     const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift.data)[0], [shift.data]);
 
     return (

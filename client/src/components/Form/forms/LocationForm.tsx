@@ -1,7 +1,7 @@
 import { useAuth } from "@/misc/AuthProvider";
 import { TextInput, Button, Fieldset } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 export default function LocationForm({ ...props }) {

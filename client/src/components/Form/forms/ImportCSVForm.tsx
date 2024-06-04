@@ -1,7 +1,7 @@
 import { Button, FileInput, Tooltip, Divider } from "@mantine/core";
 import { MonthPickerInput, YearPickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { CSVLink } from "react-csv";
 import Papa from 'papaparse';
@@ -10,7 +10,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { TbAsterisk, TbDownload } from "react-icons/tb";
 import { modals } from "@mantine/modals";
 import { useAuth } from "@/misc/AuthProvider";
-import { fetchQueryApi } from "@/misc/FetchDataApi";
+import { queriesApi } from "@/misc/FetchDataApi";
 
 dayjs.extend(customParseFormat);
 
@@ -26,7 +26,7 @@ const addNotes = {
 export default function ImportForm({ ...props }) {
     const queryClient = useQueryClient();
     const { token, axiosJWT } = useAuth();
-    const {staff, shiftCategory} = fetchQueryApi();
+    const {staff, shiftCategory} = queriesApi();
     
     const openDeleteModal = () =>
         modals.openConfirmModal({

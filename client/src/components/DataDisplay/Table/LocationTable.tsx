@@ -42,10 +42,13 @@ export default function LocationTable({ ...props }) {
 
     const data = props.data;
     const openModal = (value: any) => modals.openConfirmModal({
+        classNames: {
+            header: 'bg-red-600'
+        },
         centered: true,
-        title: 'Please confirm your action',
+        title: <span className="font-bold text-white">Please confirm your action</span>,
         children: (
-            <div>
+            <div className="mt-4">
                 Do you wish to delete the location <span className="font-bold">({value.ca_alias})</span>?
             </div>
         ),

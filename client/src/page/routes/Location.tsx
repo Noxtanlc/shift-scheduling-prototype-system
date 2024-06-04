@@ -6,7 +6,7 @@ import * as Icon from 'react-icons/bs';
 import { notifications } from "@mantine/notifications";
 import { LocationForm } from "@/components/Form";
 import Modal from "@/components/Modal";
-import { locationQuery } from "@/misc/FetchDataApi";
+import { queriesApi } from "@/misc/FetchDataApi";
 import { useAuth } from "@/misc/AuthProvider";
 
 interface InitialNotification {
@@ -64,8 +64,8 @@ export default function Location() {
     });
 
     const [update, setUpdate] = useState(false);
-    
-    const data = locationQuery(token.accessToken)
+
+    const { location } = queriesApi();
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -181,7 +181,7 @@ export default function Location() {
                         </Button>
                     </div>
                     <LocationTable
-                        data={data.data}
+                        data={location.data}
                         opened={opened}
                         modalHandler={modalHandler}
                         handler={handler}

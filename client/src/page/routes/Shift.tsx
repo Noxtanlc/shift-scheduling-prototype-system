@@ -10,8 +10,7 @@ import Modal from "@/components/Modal";
 import { ShiftCategoryForm } from "@/components/Form";
 import { CSVLink } from "react-csv";
 import { TbDownload } from "react-icons/tb";
-import { fetchQueryApi } from "@/misc/FetchDataApi";
-import { useAuth } from "@/misc/AuthProvider";
+import { queriesApi } from "@/misc/FetchDataApi";
 
 interface initial {
     title: string | undefined;
@@ -68,7 +67,7 @@ export default function ShiftType() {
         }
     });
     const [update, setUpdate] = useState(false);
-    const { shiftCategory } = fetchQueryApi();
+    const { shiftCategory } = queriesApi();
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const CSVExport = () => (

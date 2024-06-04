@@ -7,10 +7,10 @@ import { ScheduleTable } from "@/components/DataDisplay/";
 import { ScheduleData } from "@/misc/ScheduleData";
 import Modal from "@/components/Modal";
 import { ImportForm } from "@/components/Form";
-import { useMutationState, useQueryClient } from "@tanstack/react-query";
+import { useMutationState } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useAuth } from "../../misc/AuthProvider";
-import { fetchQueryApi } from "@/misc/FetchDataApi";
+import { queriesApi } from "@/misc/FetchDataApi";
 
 interface initial {
     title: string | undefined;
@@ -82,7 +82,7 @@ export default function Schedule() {
         response: "",
     };
 
-    const {shift, staff, group, assigned_staff, shiftCategory} = fetchQueryApi();
+    const {shift, staff, group, assigned_staff, shiftCategory} = queriesApi();
 
     const date = new Date();
     const [pickerValue, setPickerValue] = useState<Date | null>(

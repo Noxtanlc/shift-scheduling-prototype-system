@@ -9,7 +9,7 @@ import { BsPlusCircle } from "react-icons/bs";
 import { GroupForm } from "@/components/Form";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/misc/AuthProvider";
-import { assigned_staffQuery, fetchQueryApi, groupQuery, staffQuery } from "@/misc/FetchDataApi";
+import { queriesApi } from "@/misc/FetchDataApi";
 
 export async function queryFunction() {
     const response = await axios.get("http://127.0.0.1:3001/api/group");
@@ -89,7 +89,7 @@ export default function GroupPage() {
         }
     });
 
-    const { staff, group, assigned_staff } = fetchQueryApi();
+    const { staff, group, assigned_staff } = queriesApi();
 
     const GroupArray = useMemo(() => organiseData(group.data, assigned_staff.data), [group.data, assigned_staff.data]);
 

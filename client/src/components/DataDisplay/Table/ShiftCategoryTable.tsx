@@ -29,6 +29,11 @@ export default function ShiftCategoryTable({ ...props }) {
                 refetchType: 'all',
             });
 
+            await queryClient.invalidateQueries({
+                queryKey: ['shift'],
+                refetchType: 'all',
+            });
+
             props.setUpdate(!props.update);
             props.setNotification({
                 action: 'Delete',
@@ -38,11 +43,14 @@ export default function ShiftCategoryTable({ ...props }) {
         },
     });
     const openModal = (value: any) => modals.openConfirmModal({
+        classNames: {
+            header: 'bg-red-600'
+        },
         centered: true,
-        title: 'Please confirm your action',
+        title: <span className="font-bold text-white">Please confirm your action</span>,
         children: (
-            <div>
-                Do you wish to delete the shift category <span className="font-bold">({value.st_name})</span>?
+            <div className="mt-4">
+                Do you wish to delete the shift category <span className="font-bold">({value.st_name})</span>? All employees' shift assigned with the shift category will be removed!
             </div>
         ),
         labels: { confirm: 'Confirm', cancel: 'Cancel' },
