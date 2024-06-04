@@ -57,7 +57,7 @@ const generateAccessToken = (user: any) => {
         id: user.id,
         isAdmin: user.isAdmin,
     }, "loginKey", {
-        expiresIn: "2hr",
+        expiresIn: "5m",
     });
 }
 
@@ -77,7 +77,6 @@ app.post("/api/login", async (req, res) => {
 
     if (user) {
         if (user.password === password) {
-            console.log("YES");
             const accessToken = generateAccessToken(user);
             const refreshToken = generateRefreshToken(user);
             refreshTokens.push(refreshToken);

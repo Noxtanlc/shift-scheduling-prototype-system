@@ -88,7 +88,11 @@ export default function Schedule() {
         response: "",
     };
 
-    var shift = queryClient.getQueryData(['shift']);
+    var shift = useQuery({
+        ...getShiftData(token.accessToken),
+        initialData: queryClient.getQueryData(['shift']),
+        enabled: false,
+    }).data ?? [];
     
     const group: any = useQuery({
         ...getGroup(token.accessToken),

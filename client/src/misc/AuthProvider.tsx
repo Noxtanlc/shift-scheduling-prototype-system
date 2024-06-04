@@ -74,6 +74,7 @@ export default function AuthProvider({ children }: any) {
     }
     catch (err) {
       console.log(err);
+      <Navigate to='' replace />
     }
   };
 

@@ -11,7 +11,7 @@ export default function Root() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  console.log(pathname);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -28,7 +28,7 @@ export default function Root() {
     if (pathname === '/login' && token.accessToken) {
       navigate('/', {replace: true});
     }
-  }, [token.accessToken]);
+  }, [token]);
 
   if (token.accessToken) {
     FetchDataApi(queryClient, token.accessToken, user.isAdmin);

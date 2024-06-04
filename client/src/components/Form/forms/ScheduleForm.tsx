@@ -1,4 +1,4 @@
-import { Button, Table, NativeSelect, Tooltip } from "@mantine/core";
+import { Button, Table, NativeSelect, Tooltip, Fieldset } from "@mantine/core";
 import { DateInput, DateInputProps } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -207,22 +207,23 @@ export default function ScheduleForm({ ...props }) {
     const queryClient = useQueryClient();
     const { token, axiosJWT } = useAuth();
 
-    var shift = queryClient.getQueryData(['shift']);
-    const staff: any = useQuery({
+    var shift = useQuery({
+        ...getShiftData(token.accessToken),
+        enabled: false,
+    }) ?? [];
+    
+    const staff: any = queryClient.getQueryData(['staff']) ?? useQuery({
         ...getStaff(token.accessToken),
-        initialData: queryClient.getQueryData(['staff']),
         enabled: false,
     }).data;
 
-    const shiftCategory: any = useQuery({
+    const shiftCategory: any = queryClient.getQueryData(['shiftCategory']) ?? useQuery({
         ...getShiftCategory(token.accessToken),
-        initialData: queryClient.getQueryData(['shiftCategory']),
         enabled: false,
     }).data;
 
-    let location: any = useQuery({
+    let location: any = queryClient.getQueryData(['location']) ?? useQuery({
         ...getLocation(token.accessToken),
-        initialData: queryClient.getQueryData(['location']),
         enabled: false,
     }).data;
 
@@ -251,7 +252,7 @@ export default function ScheduleForm({ ...props }) {
             value: ele.id,
         });
     });
-    
+
     location.map((ele: any) => {
         ca_select.push({
             label: ele.ca_alias,
@@ -262,6 +263,7 @@ export default function ScheduleForm({ ...props }) {
     const [action, setAction] = useState('add');
     const sDateRef = useRef<HTMLInputElement>(null);
     const eDateRef = useRef<HTMLInputElement>(null);
+    const [disabled, setDisabled] = useState(false);
 
     const initialValues = {
         id: undefined,
@@ -307,6 +309,9 @@ export default function ScheduleForm({ ...props }) {
                 }
             });
         },
+        onMutate: () => {
+            setDisabled(true);
+        },
         onSuccess: async (res: any) => {
             await queryClient.invalidateQueries({
                 queryKey: ['shift'],
@@ -319,6 +324,7 @@ export default function ScheduleForm({ ...props }) {
                 title: res.data.title,
                 response: res.data.response
             });
+            setDisabled(false);
         },
         onError: (res: any) => {
             props.setUpdate(!props.update);
@@ -333,7 +339,7 @@ export default function ScheduleForm({ ...props }) {
 
     useEffect(() => {
         if (mutation.isSuccess) {
-            shift = queryClient.getQueryData(['shift']);
+            shift.refetch();
             mutation.reset();
             form.setInitialValues(initialValues);
             setAction('add');
@@ -343,7 +349,7 @@ export default function ScheduleForm({ ...props }) {
 
 
     const filteredStaff = staff.filter((ele: any) => ele.staff_id === props.staff_id);
-    const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift)[0], [shift]);
+    const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift.data)[0], [shift.data]);
 
     return (
         <div className="flex flex-col gap-2 overflow-y-auto md:flex-row">
@@ -368,101 +374,103 @@ export default function ScheduleForm({ ...props }) {
 
                     })}
                 >
-                    <div className="pb-2 border-b-2 dark:border-zinc-200">
-                        <span className="font-bold">{data.name}</span>
-                    </div>
-                    <div className="h-6">
-                        {form.getValues().id !== undefined ? (
-
-                            <span className="text-sm italic text-slate-600 dark:text-slate-200">Shift ID: {form.getValues().id}</span>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                    <div className="flex flex-row gap-8">
-                        <div className="w-full">
-                            <DateInput
-                                allowDeselect={false}
-                                key={form.key('s_date')}
-                                title="Start Date"
-                                label="Pick start date"
-                                valueFormat="DD/MM/YYYY"
-                                placeholder="Select date"
-                                type="default"
-                                classNames={{
-                                    label: "text-nowrap"
-                                }}
-                                required
-                                ref={sDateRef}
-                                dateParser={dateParser}
-                                error="Please select a date!"
-                                {...form.getInputProps('s_date')}
-                            />
+                    <Fieldset disabled={disabled} variant="unstyled">
+                        <div className="pb-2 border-b-2 dark:border-zinc-200">
+                            <span className="font-bold">{data.name}</span>
                         </div>
-                        <div className="w-full">
-                            <DateInput
-                                allowDeselect={false}
-                                key={form.key('e_date')}
-                                title="End Date"
-                                placeholder="Select date"
-                                label="Pick end date"
-                                valueFormat="DD/MM/YYYY"
-                                required
-                                ref={eDateRef}
-                                dateParser={dateParser}
-                                minDate={form.getValues().s_date}
-                                error="Please select a date!"
-                                {...form.getInputProps('e_date')}
-                            />
+                        <div className="h-6">
+                            {form.getValues().id !== undefined ? (
+
+                                <span className="text-sm italic text-slate-600 dark:text-slate-200">Shift ID: {form.getValues().id}</span>
+                            ) : (
+                                <></>
+                            )}
                         </div>
-                    </div>
-
-                    <div className="flex flex-col">
-                        <div>
-                            <NativeSelect title="Select Shift Category"
-                                label="Select Shift Category" data={st_select}
-                                required
-                                key={form.key('st_id')}
-                                {...form.getInputProps('st_id')}
-                            />
-
+                        <div className="flex flex-row gap-8">
+                            <div className="w-full">
+                                <DateInput
+                                    allowDeselect={false}
+                                    key={form.key('s_date')}
+                                    title="Start Date"
+                                    label="Pick start date"
+                                    valueFormat="DD/MM/YYYY"
+                                    placeholder="Select date"
+                                    type="default"
+                                    classNames={{
+                                        label: "text-nowrap"
+                                    }}
+                                    required
+                                    ref={sDateRef}
+                                    dateParser={dateParser}
+                                    error="Please select a date!"
+                                    {...form.getInputProps('s_date')}
+                                />
+                            </div>
+                            <div className="w-full">
+                                <DateInput
+                                    allowDeselect={false}
+                                    key={form.key('e_date')}
+                                    title="End Date"
+                                    placeholder="Select date"
+                                    label="Pick end date"
+                                    valueFormat="DD/MM/YYYY"
+                                    required
+                                    ref={eDateRef}
+                                    dateParser={dateParser}
+                                    minDate={form.getValues().s_date}
+                                    error="Please select a date!"
+                                    {...form.getInputProps('e_date')}
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <NativeSelect title="Select Control Area"
-                                label="Select Location" data={ca_select}
-                                key={form.key('ca_id')}
-                                {...form.getInputProps('ca_id')}
-                            />
+
+                        <div className="flex flex-col">
+                            <div>
+                                <NativeSelect title="Select Shift Category"
+                                    label="Select Shift Category" data={st_select}
+                                    required
+                                    key={form.key('st_id')}
+                                    {...form.getInputProps('st_id')}
+                                />
+
+                            </div>
+                            <div>
+                                <NativeSelect title="Select Control Area"
+                                    label="Select Location" data={ca_select}
+                                    key={form.key('ca_id')}
+                                    {...form.getInputProps('ca_id')}
+                                />
+                            </div>
                         </div>
-                    </div>
-
-                </form>
-                <div className="flex justify-between mb-8">
-                    <Button onClick={() => {
-                        form.reset();
-                        // form.setInitialValues(initialValues);
-                        setAction('add');
-                    }}
-                    >
-                        Reset
-                    </Button>
-
-                    <div className="flex gap-3">
-                        <Button color="red"
-                            style={{ display: action === 'edit' || action === 'delete' ? undefined : 'none' }}
-                            onClick={(e:any) => {
-                                e.preventDefault();
-                                setAction('delete');
-                                mutation.mutate(form.getValues());
+                        <div className="flex justify-between mt-2 mb-6">
+                            <Button onClick={() => {
+                                form.reset();
+                                // form.setInitialValues(initialValues);
+                                setAction('add');
                             }}
-                        >
-                            Delete
-                        </Button>
-                        <Button type='submit' form="ScheduleForm">
-                            Save
-                        </Button>
-                    </div>
-                </div>
+                            >
+                                Reset
+                            </Button>
+
+                            <div className="flex gap-3">
+                                <Button color="red"
+                                    style={{ display: action === 'edit' || action === 'delete' ? undefined : 'none' }}
+                                    onClick={(e: any) => {
+                                        e.preventDefault();
+                                        setAction('delete');
+                                        mutation.mutate(form.getValues());
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                                <Button type='submit' form="ScheduleForm">
+                                    Save
+                                </Button>
+                            </div>
+                        </div>
+                    </Fieldset>
+                </form>
+
                 <div className="flex justify-end">
                     <Button onClick={() => {
                         props.handler.close();
