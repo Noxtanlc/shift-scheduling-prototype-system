@@ -26,7 +26,7 @@ export default function Root() {
       navigate('/', { replace: true });
     }
 
-    if (pathname === '' && !token) {
+    if (pathname === '/' && !token) {
       navigate('/login', { replace: true });
     }
   }, [token.accessToken]);
