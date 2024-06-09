@@ -38,7 +38,7 @@ export default function ShiftCategoryTable({ ...props }) {
             props.setNotification({
                 action: 'Delete',
                 title: res.data.title,
-                message: res.data.message
+                response: res.data.response
             });
         },
     });
@@ -161,6 +161,7 @@ export default function ShiftCategoryTable({ ...props }) {
         {
             name: "Action",
             maxWidth: '10%',
+            width: '120px',
             cell: (row: any) =>
                 <div className="flex flex-col justify-between flex-1 md:flex-row">
                     <div className='mx-auto'>
@@ -203,121 +204,3 @@ export default function ShiftCategoryTable({ ...props }) {
         />
     )
 }
-
-/*
-<DataTable
-    className="dark:bg-gray-900"
-    size="small"
-    paginator
-    rows={10}
-    rowsPerPageOptions={[10, 25, 50]}
-    value={data}
-    tableStyle={{ minWidth: '50rem', fontSize: '0.9rem' }}
-    paginatorRight
->
-    <Column
-        header="#"
-        style={{ width: "5%" }}
-        body={(_data, option) => (
-            option.rowIndex + 1
-        )}
-    />
-    <Column field="st_name" header="Name" style={{ width: "40%" }} />
-    <Column field="st_alias" header="Alias" style={{ width: "10%" }} align={"center"} />
-    <Column field="color-coding" header="Color Code" style={{ width: "10%" }}
-        body={(data) => (
-            <div className="w-100" style={
-                {
-                    backgroundColor: data['color-coding'],
-                    color: data['color-coding']
-                }
-            }>
-                {data['color-coding']}
-            </div>
-        )}
-    />
-    <Column field="start_time" header="Start Time" style={{ width: "10%" }}
-        body={(data) => {
-            let timeArr: any = data['start_time'].split(":");
-            let time = new Date(0, 0, 0, timeArr[0], timeArr[1])
-                .toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric', hourCycle: "h23" });
-            let timeLabel: any;
-            if (+(timeArr[0]) < 12) {
-                timeLabel = 'AM'
-            } else
-                timeLabel = 'PM'
-            return (
-                <div className="text-right">
-                    {time} {timeLabel}
-                </div>
-            )
-        }}
-    />
-    <Column field="end_time" header="End Time" style={{ width: "10%" }}
-        body={(data) => {
-            let timeArr: any = data['end_time'].split(":");
-            let time = new Date(0, 0, 0, timeArr[0], timeArr[1])
-                .toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric', hourCycle: "h23" });
-            let timeLabel: any;
-            if (+(timeArr[0]) < 12) {
-                timeLabel = 'A.M'
-            } else
-                timeLabel = 'P.M'
-            return (
-                <div className="text-right">
-                    {time} {timeLabel}
-                </div>
-            )
-        }}
-    />
-    <Column field="active" header="Status" style={{ width: "10%" }} align={"center"}
-        body={(data) => {
-            let status: string;
-
-            if (data['active'] === 1) {
-                status = "Active"
-            } else
-                status = "Disabled"
-            return (
-                <>
-                    {status}
-                </>
-            )
-        }}
-    />
-    <Column
-        style={{ width: "10%" }}
-        align="center"
-        header="Action"
-        body={(data) => (
-            <div className="flex justify-between flex-1">
-                <div className=''>
-                    <Button
-                        className='py-0 ps-3 pe-3'
-                        variant="transparent"
-                        id='actionBtn'
-                        onClick={() => {
-                            props.modalHandler("Edit", data);
-                            props.handler.open();
-                        }}
-                    >
-                        <icon.BsPencil size='16' />
-                    </Button>
-                </div>
-                <div className=''>
-                    <Button className='py-0 ps-3 pe-3'
-                        variant="transparent"
-                        id='actionBtn'
-                        onClick={() => {
-                            openModal(data);
-                        }}
-                    >
-                        <icon.BsXCircle size='16' />
-                    </Button>
-                </div>
-            </div>
-        )}
-    />
-
-</DataTable>
-*/

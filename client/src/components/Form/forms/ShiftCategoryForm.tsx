@@ -4,6 +4,7 @@ import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useRef, useMemo, useState } from "react";
 import * as icon from "react-icons/bs";
 
@@ -73,6 +74,7 @@ export default function ShiftCategoryForm({ ...props }) {
     const sdRef = useRef<HTMLInputElement>(null);
     const edRef = useRef<HTMLInputElement>(null);
     const form = useForm<ShiftCategoryForm>({
+        mode: 'uncontrolled',
         initialValues: {
             id: 0,
             name: '',
@@ -81,6 +83,25 @@ export default function ShiftCategoryForm({ ...props }) {
             start_time: '00:00',
             end_time: '00:00',
             active: false,
+        },
+
+        validate: {
+            start_time: (value) => {
+                const sTime = dayjs(`2000-01-01 ${value}`);
+                const eTime = dayjs(`2000-01-01 ${form.getValues().end_time}`);
+
+                if (sTime.isAfter(eTime.toDate())) {
+                    return "Start time cannot be greater than end time!"
+                }
+            },
+            end_time : (value) => {
+                const sTime = dayjs(`2000-01-01 ${form.getValues().start_time}`);
+                const eTime = dayjs(`2000-01-01 ${value}`);
+
+                if (eTime.isBefore(sTime.toDate())) {
+                    return "End time cannot be smaller than start time!"
+                }
+            }
         }
     });
 
@@ -123,43 +144,55 @@ export default function ShiftCategoryForm({ ...props }) {
     }
 
     return (
-        <form onSubmit={form.onSubmit((values: any) => mutation.mutate(values))}>
+        <form
+            onSubmit={form.onSubmit((values: any) =>
+                mutation.mutate(values)
+            )}
+        >
             <Fieldset disabled={formDisabled} variant="unstyled">
                 <TextInput
                     required
                     label="Template Name"
                     placeholder="Enter shift template name"
+                    key={form.key('name')}
                     {...form.getInputProps('name')}
                 />
                 <TextInput
                     required
                     label="Alias/Code"
                     placeholder="Enter alias/code"
+                    key={form.key('alias')}
                     {...form.getInputProps('alias')}
                 />
                 <ColorInput
                     label="Color Code"
                     description="Select color code for template"
                     placeholder="Select Color"
+                    key={form.key('color')}
                     {...form.getInputProps('color')}
                 />
                 <div className="mb-3 md:flex md:flex-row md:gap-2">
                     <TimeInput
+                        className="w-full"
                         ref={sdRef}
                         leftSection={pickerControl(sdRef)}
                         label="Start Time"
                         description="Shift Starting Time"
                         placeholder="Select/Enter start time"
                         withSeconds={false}
+                        key={form.key('start_time')}
                         {...form.getInputProps('start_time')}
                     />
                     <TimeInput
+                        className="w-full"
                         ref={edRef}
                         leftSection={pickerControl(edRef)}
                         label="End Time"
                         description="Shift Ending Time"
                         placeholder="Select/Enter end time"
                         withSeconds={false}
+                        minTime={form.getValues().start_time}
+                        key={form.key('end_time')}
                         {...form.getInputProps('end_time')}
                     />
                 </div>

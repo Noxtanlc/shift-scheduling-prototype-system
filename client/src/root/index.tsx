@@ -26,7 +26,8 @@ export default function Root() {
       navigate('/', { replace: true });
     }
 
-    if (pathname === '/' && !token) {
+    if (pathname === '/' && !token.accessToken) {
+      console.log(pathname)
       navigate('/login', { replace: true });
     }
   }, [token.accessToken]);

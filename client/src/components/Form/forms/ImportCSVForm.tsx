@@ -18,7 +18,7 @@ const addNotes = {
     asterisk: <TbAsterisk color={'red'} />,
     notes: [
         "Only shift category ID or shift alias are accepted for importing process.",
-        "Locations are not supproted for now.",
+        "Locations are not supported for now.",
         "Employee's shift will not be changed if nothing is entered in the row of that employee.",
     ]
 }
@@ -269,7 +269,7 @@ export default function ImportForm({ ...props }) {
                                 Download Shift Template by Month and Year
                             </div>
                         </div>
-                        <div className='flex justify-between gap-2'>
+                        <div className='flex flex-col justify-between gap-2 sm:flex-row'>
                             <div className="w-1/2 my-auto">
                                 <div className="text-sm">
                                     <div className="font-bold">Filename preview:</div>

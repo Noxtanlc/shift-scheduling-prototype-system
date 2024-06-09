@@ -105,8 +105,6 @@ export default function AuthProvider({ children }: any) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + token.accessToken;
     } else {
       delete axios.defaults.headers.common["Authorization"];
-      removeToken();
-      removeUser();
       <Navigate to='/login' replace />
     }
   }, [token.accessToken]);

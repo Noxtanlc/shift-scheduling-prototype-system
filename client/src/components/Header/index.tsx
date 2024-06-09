@@ -11,7 +11,7 @@ import { useTheme } from "@/misc/ThemeProvider";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header({ ...props }) {
-    const { token, setToken, user, axiosJWT } = useAuth();
+    const { token, removeToken, user, removeUser, axiosJWT } = useAuth();
     const navigate = useNavigate();
     const { theme, ToggleTheme } = useTheme()!;
     const [topOpened, topHandler] = useDisclosure();
@@ -45,7 +45,8 @@ export default function Header({ ...props }) {
             });
 
             setTimeout(() => {
-                setToken();
+                removeToken();
+                removeUser();
                 navigate('/login', { replace: true });
                 queryClient.removeQueries();
             }, 2 * 1000);

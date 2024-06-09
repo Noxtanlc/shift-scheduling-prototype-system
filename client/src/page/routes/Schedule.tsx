@@ -210,6 +210,7 @@ export default function Schedule() {
                 }
                 case "import": {
                     notifications.show({
+                        autoClose: 5000,
                         title: <div className="font-bold">{notification.title}</div>,
                         message: <div>{notification.response}</div>,
                         color: "green",

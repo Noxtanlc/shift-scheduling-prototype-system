@@ -10,7 +10,6 @@ import {
 } from "react-icons/md";
 import { useAuth } from "@/misc/AuthProvider";
 import { Outlet } from "react-router-dom";
-import { fetchQueriesApi } from "@/misc/FetchDataApi";
 
 const slideRight = {
   in: { opacity: 1, marginLeft: "0" },
@@ -19,7 +18,7 @@ const slideRight = {
 };
 
 export default function DefaultLayout() {
-  const { token, user } = useAuth();
+  const { user } = useAuth();
   const isAdmin = user.isAdmin;
 
   const adminRoute = [

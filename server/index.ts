@@ -333,6 +333,7 @@ app.post("/api/shifts/import", async (req, res) => {
     const insert = "INSERT INTO `shift` (`FKstaffID`, `start_date`, `end_date`, `st_id`, `ca_id`) VALUES (?, ?, ?, ?, null)";
     const shiftCategory = (await db.query<RowDataPacket[]>("SELECT * FROM `shift_category`"))[0];
     var update = false;
+    var errMsg = 'No changes are made or ran into a problem...';
 
     for (const ele of data) {
         let empty = true;
@@ -344,21 +345,30 @@ app.post("/api/shifts/import", async (req, res) => {
         }
 
         if (!empty) {
-            if (!update) {
-                await db.query("DELETE FROM `shift` WHERE YEAR(`start_date`) = ? AND MONTH(`start_date`) = ? AND `FKstaffID` = ?", [year, month, ele.ID])
-                    .catch((err) => console.log(err));
-            }
+            await db.query("DELETE FROM `shift` WHERE YEAR(`start_date`) = ? AND MONTH(`start_date`) = ? AND `FKstaffID` = ?", [year, month, ele.ID])
+                .catch((err) => console.log(err));
 
             for (let i = 1; i <= days; i++) {
                 const date = year + '-' + month + '-' + i;
                 if (ele[i] !== '') {
                     const shiftCategoryVal = shiftCategory.filter((val) => val.st_alias.toLowerCase() === ele[i].toLowerCase() || ele[i] === val['id'].toString());
-                    await db.query(insert, [ele.ID, date, date, shiftCategoryVal[0]['id']]).then(() => update = true).catch(() => update = false);
+                    if (shiftCategoryVal.length === 0) {
+                        update = false;
+                        errMsg = 'Invalid shift category ID/alias/code found in selected CSV shift template. Please use valid shift category ID/alias/code according to the shift category list.';
+                        break;
+                    } else {
+                        await db.query(insert, [ele.ID, date, date, shiftCategoryVal[0]['id']])
+                        .then((res) => {
+                            update = true;
+                        })
+                        .catch(() => update = false);
+                    }
                 }
             }
         }
     }
 
+    console.log(update);
     if (update) {
         res.send({
             response: 'Shifts have been updated!',
@@ -366,7 +376,7 @@ app.post("/api/shifts/import", async (req, res) => {
         });
     } else {
         res.send({
-            response: 'No changes are made or ran into a problem...',
+            response: errMsg,
             title: 'Failed'
         });
     }
@@ -653,12 +663,12 @@ app.post("/api/shift-category/:id", verify, async (req, res) => {
     const eTime = data['end_time'];
     const active = data['active'] ? 1 : 0;
     let dupe = false;
-    const checkQuery = "SELECT * FROM `shift_category` WHERE LOWER(`st_name`) = ?";
+    const checkQuery = "SELECT * FROM `shift_category` WHERE (LOWER(`st_name`) = ? OR LOWER(`st_alias`) = ?)";
 
     switch (action) {
         case 'Add': {
             const Insert = "INSERT INTO `shift_category` (`st_name`, `st_alias`, `color-coding`, `start_time`, `end_time`, `active`) VALUES (?, ?, ?, ?, ?, ?)"
-            await db.query<RowDataPacket[]>(checkQuery, [name.toLowerCase()])
+            await db.query<RowDataPacket[]>(checkQuery, [id, name.toLowerCase(), alias.toLowerCase()])
                 .then((res: any) => {
                     if (res[0].length > 0)
                         dupe = true;
@@ -689,7 +699,7 @@ app.post("/api/shift-category/:id", verify, async (req, res) => {
         case 'Edit': {
             const check = checkQuery + ' AND id != ?';
             const update = "UPDATE `shift_category` SET `st_name` = ?, `st_alias` = ?, `color-coding` = ?, `start_time` = ?, `end_time` = ?, `active` = ? WHERE `id` = ?";
-            await db.query(check, [name.toLowerCase(), id])
+            await db.query(check, [name.toLowerCase(), alias.toLowerCase(), id])
                 .then((res: any) => {
                     if (res[0].length > 0)
                         dupe = true;
@@ -701,7 +711,7 @@ app.post("/api/shift-category/:id", verify, async (req, res) => {
 
             if (!dupe) {
                 // Update Shift Template Name
-                db.query(update, [name, alias, color, sTime, eTime, active, id])
+                await db.query(update, [name, alias, color, sTime, eTime, active, id])
                     .then((result) => {
                         res.send({
                             response: name,
@@ -723,16 +733,18 @@ app.post("/api/shift-category/:id", verify, async (req, res) => {
             await db.query(Delete, id)
                 .then(() => {
                     res.send({
-                        message: data.name,
+                        response: data['st_name'],
                         title: 'Success',
                     })
                 }).catch(() => {
                     res.send({
+                        response: data['st_name'],
                         title: "Failed",
                     });
                 });
             break;
         }
+
         default: {
             break;
         }

@@ -95,7 +95,7 @@ export default function ShiftType() {
                 case 'Add': {
                     notifications.show({
                         title: <div className="font-bold">{notification.title}</div>,
-                        message: <div>Shift {notification.response} has been added!</div>,
+                        message: <div>Shift category <span className="font-bold">{notification.response}</span> has been added!</div>,
                         color: "green",
                         onClose: () => setNotification(InitialNotification),
                     });
@@ -104,7 +104,7 @@ export default function ShiftType() {
                 case 'Edit': {
                     notifications.show({
                         title: <div className="font-bold">Update Succesfully!</div>,
-                        message: <div>Shift has been updated!</div>,
+                        message: <div>Shift category <span className="font-bold">{notification.response}</span> has been updated!</div>,
                         color: "green",
                         onClose: () => setNotification(InitialNotification),
                     });
@@ -113,7 +113,7 @@ export default function ShiftType() {
                 case 'Delete': {
                     notifications.show({
                         title: <div className="font-bold">{notification.title}</div>,
-                        message: <div>Shift {notification.response} has been deleted!</div>,
+                        message: <div>Shift category <span className="font-bold">{notification.response}</span> has been deleted!</div>,
                         color: "green",
                         onClose: () => setNotification(InitialNotification),
                     });
@@ -128,7 +128,7 @@ export default function ShiftType() {
                 case 'Edit': {
                     notifications.show({
                         title: <div className="font-bold">{notification.title}</div>,
-                        message: <div>Shift <span className="font-bold">{notification.response}</span> already existed! Try a different name...</div>,
+                        message: <div>There are shift category with template name or template code already existed! Try a different name or code...</div>,
                         color: "red",
                         onClose: () => setNotification(InitialNotification),
                     });
