@@ -8,7 +8,6 @@ import axios from "axios";
 import { BsPlusCircle } from "react-icons/bs";
 import { GroupForm } from "@/components/Form";
 import Modal from "@/components/Modal";
-import { useAuth } from "@/misc/AuthProvider";
 import { queriesApi } from "@/misc/FetchDataApi";
 
 export async function queryFunction() {

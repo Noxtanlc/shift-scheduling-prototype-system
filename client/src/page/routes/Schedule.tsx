@@ -7,7 +7,6 @@ import { ScheduleTable } from "@/components/DataDisplay/";
 import { ScheduleData } from "@/misc/ScheduleData";
 import Modal from "@/components/Modal";
 import { ImportForm } from "@/components/Form";
-import { useMutationState } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useAuth } from "../../misc/AuthProvider";
 import { queriesApi } from "@/misc/FetchDataApi";
@@ -81,7 +80,7 @@ export default function Schedule() {
             ).getDate(),
         };
     }, [pickerValue]);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
 
     const [update, setUpdate] = useState(false);
 

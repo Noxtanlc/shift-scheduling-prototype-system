@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { nameFilter } from "../filters";
 import DataTable from "react-data-table-component";
 import { ActionIcon } from "@mantine/core";
@@ -12,7 +12,7 @@ import { TbPencil } from "react-icons/tb";
 export default function ScheduleTable({ ...props }) {
     const { user } = useAuth();
     const isAdmin = user.isAdmin;
-    const data = props.data;
+
     const [filterText, setFilterText] = useState('');
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
     const filter = nameFilter({
@@ -22,12 +22,18 @@ export default function ScheduleTable({ ...props }) {
         setResetPaginationToggle: setResetPaginationToggle,
     });
 
+    const [data, setData]: any = useState([]);
     // const [loading, setLoading]: any = useState(true);
+
+    const { theme } = useTheme()!;
+
+    useEffect(() => {
+        setData(props.data);
+    }, [props.data]);
+
     const filteredItems = data.filter(
         (ele: any) => ele.name && ele.name.toLowerCase().includes(filterText.toLowerCase()),
     );
-
-    const { theme } = useTheme()!;
 
     const columns: TableColumn<any>[] = [
         {
@@ -105,7 +111,7 @@ export default function ScheduleTable({ ...props }) {
         }
     }, [props.dateValue.numDay])
     */
-   
+
     return (
         <DataTable
             columns={columns}
