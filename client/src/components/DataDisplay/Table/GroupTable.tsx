@@ -3,9 +3,9 @@ import { modals } from "@mantine/modals";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import * as icon from "react-icons/bs";
 import { useTheme } from "@/misc/ThemeProvider";
 import { useAuth } from "@/misc/AuthProvider";
+import { BsPencil, BsXCircle } from "react-icons/bs";
 
 export default function GroupTable({ ...props }) {
     const { token, axiosJWT } = useAuth();
@@ -46,7 +46,6 @@ export default function GroupTable({ ...props }) {
             setDisabled(false);
         },
     });
-    const [pending, setPending] = useState(true);
     const openModal = (value: any) => modals.openConfirmModal({
         classNames: {
             header: 'bg-red-600'
@@ -113,7 +112,7 @@ export default function GroupTable({ ...props }) {
                             }
                             }
                         >
-                            <icon.BsPencil />
+                            <BsPencil />
                         </Button>
                     </div>
                     <div className='mx-auto'>
@@ -125,7 +124,7 @@ export default function GroupTable({ ...props }) {
                                 openModal(row);
                             }}
                         >
-                            <icon.BsXCircle />
+                            <BsXCircle />
                         </Button>
                     </div>
                 </div>
@@ -146,9 +145,10 @@ export default function GroupTable({ ...props }) {
         return staff;
     }
 
+    const [pending, setPending] = useState(false);
     useEffect(() => {
-        if (queryClient.isFetching({ queryKey: ['GroupPage'] })) setPending(true)
-        setPending(false);
+        if (queryClient.isFetching({ queryKey: ['group'] })) setPending(true)
+        else setPending(false);
     }, [queryClient.isFetching]);
 
     return (

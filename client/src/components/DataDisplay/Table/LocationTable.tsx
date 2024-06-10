@@ -2,14 +2,15 @@ import { useAuth } from "@/misc/AuthProvider";
 import { useTheme } from "@/misc/ThemeProvider";
 import { Button, Loader } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import * as icon from "react-icons/bs"
+import { BsPencil, BsXCircle } from "react-icons/bs";
 
 export default function LocationTable({ ...props }) {
     const { token, axiosJWT } = useAuth();
     const [disabled, setDisabled] = useState(false);
+    const queryClient = useQueryClient();
     const locationQuery = useQuery({
         queryKey: ['location'],
     });
@@ -94,7 +95,7 @@ export default function LocationTable({ ...props }) {
                                 props.handler.open();
                             }}
                         >
-                            <icon.BsPencil />
+                            <BsPencil />
                         </Button>
                     </div>
                     <div className='mx-auto'>
@@ -106,7 +107,7 @@ export default function LocationTable({ ...props }) {
                                 openModal(row);
                             }}
                         >
-                            <icon.BsXCircle />
+                            <BsXCircle />
                         </Button>
                     </div>
                 </div>,
@@ -114,8 +115,16 @@ export default function LocationTable({ ...props }) {
         },
     ]
 
+
+    const [pending, setPending] = useState(false);
+    useEffect(() => {
+        if (queryClient.isFetching({ queryKey: ['location'] })) setPending(true)
+        else setPending(false);
+    }, [queryClient.isFetching]);
+
     return (
         <DataTable
+            progressPending={pending}
             columns={col}
             data={data}
             responsive
@@ -126,55 +135,3 @@ export default function LocationTable({ ...props }) {
         />
     )
 }
-/*
-<DataTable
-    size="small"
-    paginator
-    rows={10}
-    rowsPerPageOptions={[10, 25, 50]}
-    value={data}
-    tableStyle={{ minWidth: '50rem', fontSize: '0.9rem' }}
->
-    <Column
-        header="#"
-        style={{ width: "5%" }}
-        body={(_data, option) => (
-            option.rowIndex + 1
-        )}
-    />
-    <Column field="ca_alias" header="Alias" style={{ width: "10%" }} />
-    <Column field="ca_desc" header="Description" style={{ width: "75%" }} />
-    <Column
-        style={{ width: "10%" }}
-        align="center"
-        header="Action"
-        body={(data) => (
-            <div className="flex justify-between flex-1">
-                <div className=''>
-                    <Button
-                        className='py-0 ps-3 pe-3'
-                        variant="transparent"
-                        id='actionBtn'
-                        onClick={() => {
-                            props.modalHandler('Edit', 'Edit Location', data);
-                            props.handler.open();
-                        }}
-                    >
-                        <icon.BsPencil size='16' />
-                    </Button>
-                </div>
-                <div className=''>
-                    <Button className='py-0 ps-3 pe-3'
-                        variant="transparent"
-                        id='actionBtn'
-                        onClick={() => {
-                            openModal(data);
-                        }}
-                    >
-                        <icon.BsXCircle size='16' />
-                    </Button>
-                </div>
-            </div>
-        )} />
-</DataTable>
-*/

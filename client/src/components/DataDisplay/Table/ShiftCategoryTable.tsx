@@ -4,8 +4,9 @@ import { useTheme } from "@/misc/ThemeProvider";
 import { Button } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import * as icon from "react-icons/bs"
+import { BsPencil, BsXCircle } from "react-icons/bs";
 
 export default function ShiftCategoryTable({ ...props }) {
     const { token, axiosJWT } = useAuth();
@@ -173,7 +174,7 @@ export default function ShiftCategoryTable({ ...props }) {
                                 props.handler.open();
                             }}
                         >
-                            <icon.BsPencil size='16' />
+                            <BsPencil size='16' />
                         </Button>
                     </div>
                     <div className='mx-auto'>
@@ -184,7 +185,7 @@ export default function ShiftCategoryTable({ ...props }) {
                                 openModal(row);
                             }}
                         >
-                            <icon.BsXCircle size='16' />
+                            <BsXCircle size='16' />
                         </Button>
                     </div>
                 </div>,
@@ -192,8 +193,15 @@ export default function ShiftCategoryTable({ ...props }) {
         },
     ]
 
+    const [pending, setPending] = useState(false);
+    useEffect(() => {
+        if (queryClient.isFetching({ queryKey: ['shiftCategory'] })) setPending(true)
+        else setPending(false);
+    }, [queryClient.isFetching]);
+
     return (
         <DataTable
+            progressPending={pending}
             columns={col}
             data={data}
             responsive

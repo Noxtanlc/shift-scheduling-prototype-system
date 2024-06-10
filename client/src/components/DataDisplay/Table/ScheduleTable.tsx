@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { nameFilter } from "../filters";
 import DataTable from "react-data-table-component";
-import * as tabIcon from "react-icons/tb";
-import { ActionIcon, Loader } from "@mantine/core";
+import { ActionIcon } from "@mantine/core";
 import { TableColumn } from "react-data-table-component/dist/DataTable/types";
 import { ScheduleForm } from "@/components/Form";
 import { useAuth } from "@/misc/AuthProvider";
 import { useTheme } from "@/misc/ThemeProvider";
+import { TbPencil } from "react-icons/tb";
+// import Loader from "@/common/loader";
 
 export default function ScheduleTable({ ...props }) {
     const { user } = useAuth();
     const isAdmin = user.isAdmin;
-
+    const data = props.data;
     const [filterText, setFilterText] = useState('');
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
     const filter = nameFilter({
@@ -21,17 +22,12 @@ export default function ScheduleTable({ ...props }) {
         setResetPaginationToggle: setResetPaginationToggle,
     });
 
-    const [data, setData]: any = useState([]);
-    const [loading, setLoading]: any = useState(true);
+    // const [loading, setLoading]: any = useState(true);
     const filteredItems = data.filter(
         (ele: any) => ele.name && ele.name.toLowerCase().includes(filterText.toLowerCase()),
     );
 
     const { theme } = useTheme()!;
-
-    useEffect(() => {
-        setData(props.data);
-    }, [props.data]);
 
     const columns: TableColumn<any>[] = [
         {
@@ -68,7 +64,7 @@ export default function ScheduleTable({ ...props }) {
                             )
                             props.handler.open();
                         }}>
-                            <tabIcon.TbPencil />
+                            <TbPencil />
                         </ActionIcon>
                     )
                     }
@@ -96,23 +92,23 @@ export default function ScheduleTable({ ...props }) {
         )
     }
 
+    /*
     useEffect(() => {
         if (!loading) {
             setLoading(true);
         }
         const timer = setTimeout(() => {
             setLoading(false);
-        }, 1000);
+        }, 500);
         return () => {
             clearTimeout(timer);
         }
     }, [props.dateValue.numDay])
-
+    */
+   
     return (
         <DataTable
-            progressPending={loading}
-            progressComponent={<Loader my={"sm"} />}
-            columns={loading ? [] : columns}
+            columns={columns}
             data={filteredItems}
             responsive
             pagination

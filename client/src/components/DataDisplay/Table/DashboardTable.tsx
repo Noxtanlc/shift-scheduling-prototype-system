@@ -1,6 +1,6 @@
 import { shiftList } from "@/types";
-import Loader from "@/common/loader";
-import { useEffect, useState } from "react";
+// import Loader from "@/common/loader";
+import { useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { nameFilter } from "../filters";
 import { useTheme } from "@/misc/ThemeProvider";
@@ -15,16 +15,12 @@ export default function DashboardTable({ ...props }) {
         resetPaginationToggle: resetPaginationToggle,
         setResetPaginationToggle: setResetPaginationToggle,
     });
-    const [data, setData]: any = useState([]);
+    const data = props.data;
     const filteredItems = data.filter(
         (ele: any) => ele.name && ele.name.toLowerCase().includes(filterText.toLowerCase()),
     );
 
     const { theme } = useTheme()!;
-
-    useEffect(() => {
-        setData(props.data);
-    }, [props.data]);
 
     const column: TableColumn<shiftList>[] = [
         {
@@ -72,7 +68,6 @@ export default function DashboardTable({ ...props }) {
     }
     return (
         <DataTable
-            progressComponent={<Loader />}
             columns={column}
             data={filteredItems}
             responsive

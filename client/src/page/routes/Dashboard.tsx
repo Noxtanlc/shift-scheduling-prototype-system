@@ -1,4 +1,3 @@
-import * as Icon from "react-bootstrap-icons";
 import { useMemo, useState } from "react";
 import MonthPicker from "@/components/Datepicker/CustomMonthPicker";
 import { Button, Tooltip } from "@mantine/core";
@@ -8,6 +7,8 @@ import { DashboardTable } from "@/components/DataDisplay";
 import { useAuth } from "@/misc/AuthProvider";
 import { shiftList } from "@/types";
 import { queriesApi } from "@/misc/FetchDataApi";
+import { BsCalendarEvent } from "react-icons/bs";
+import { Clipboard2Data, PersonSquare, PinMap } from "react-bootstrap-icons";
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -48,7 +49,7 @@ export default function Dashboard() {
                         >
                             <div className="flex flex-col h-full">
                                 <div className="items-center my-auto md:h-1/2 md:flex">
-                                    <Icon.Calendar className="mx-auto" size={24} />
+                                    <BsCalendarEvent className="mx-auto" size={24} />
                                 </div>
                                 <div className="items-center hidden md:h-1/2 md:flex">
                                     Schedule
@@ -65,7 +66,7 @@ export default function Dashboard() {
                         >
                             <div className="flex flex-col h-full">
                                 <div className="items-center my-auto md:h-1/2 md:flex">
-                                    <Icon.Clipboard2Data className="mx-auto" size={24} />
+                                    <Clipboard2Data className="mx-auto" size={24} />
                                 </div>
                                 <div className="items-center hidden md:h-1/2 md:flex">
                                     Shift Category
@@ -84,7 +85,7 @@ export default function Dashboard() {
                                 >
                                     <div className="flex flex-col h-full">
                                         <div className="items-center my-auto md:h-1/2 md:flex">
-                                            <Icon.PinMap className="mx-auto" size={24} />
+                                            <PinMap className="mx-auto" size={24} />
                                         </div>
                                         <div className="items-center hidden md:h-1/2 md:flex">
                                             Location
@@ -96,7 +97,7 @@ export default function Dashboard() {
                                 <Button component={Link} justify="center" id="quickTile" to="/group">
                                     <div className="flex flex-col h-full">
                                         <div className="items-center my-auto md:h-1/2 md:flex">
-                                            <Icon.PersonSquare className="mx-auto" size={24} />
+                                            <PersonSquare className="mx-auto" size={24} />
                                         </div>
                                         <div className="items-center hidden md:h-1/2 md:flex">Group</div>
                                     </div>
