@@ -6,7 +6,6 @@ import { notifications } from "@mantine/notifications";
 import { LocationForm } from "@/components/Form";
 import Modal from "@/components/Modal";
 import { queriesApi } from "@/misc/FetchDataApi";
-import { useAuth } from "@/misc/AuthProvider";
 import { BsPlusCircle } from "react-icons/bs";
 
 interface InitialNotification {
