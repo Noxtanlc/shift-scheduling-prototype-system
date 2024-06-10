@@ -63,7 +63,6 @@ function organiseData(groupArr: any, asArr: any) {
 }
 
 export default function GroupPage() {
-    const { token } = useAuth();
     const ModalInitialState: {
         action: string | undefined,
         title: string | undefined,

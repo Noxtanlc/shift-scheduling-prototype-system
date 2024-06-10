@@ -55,26 +55,8 @@ const initialModalProps: initial = {
 };
 
 export default function Schedule() {
-    const { user, token } = useAuth();
+    const { user } = useAuth();
     const isAdmin = user.isAdmin;
-
-    const scheduleFormMutation = useMutationState({
-        filters: {
-            mutationKey: ["scheduleForm"],
-        },
-        select(mutation) {
-            return mutation.state.status;
-        },
-    });
-
-    const importFormMutation = useMutationState({
-        filters: {
-            mutationKey: ["importForm"],
-        },
-        select(mutation) {
-            return mutation.state.status;
-        },
-    });
 
     const InitialNotification = {
         action: "",
@@ -361,3 +343,24 @@ export default function Schedule() {
         </>
     );
 }
+
+/** Scrapped? */
+/*
+const scheduleFormMutation = useMutationState({
+    filters: {
+        mutationKey: ["scheduleForm"],
+    },
+    select(mutation) {
+        return mutation.state.status;
+    },
+});
+
+const importFormMutation = useMutationState({
+    filters: {
+        mutationKey: ["importForm"],
+    },
+    select(mutation) {
+        return mutation.state.status;
+    },
+});
+*/

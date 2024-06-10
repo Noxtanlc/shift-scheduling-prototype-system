@@ -210,7 +210,7 @@ export default function ImportForm({ ...props }) {
                 response: res.data.response
             });
         },
-        onError: async (res: any) => {
+        onError: async () => {
             await queryClient.invalidateQueries({
                 queryKey: ['shift'],
                 refetchType: 'all',

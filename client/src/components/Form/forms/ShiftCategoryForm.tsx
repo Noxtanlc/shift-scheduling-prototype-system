@@ -3,7 +3,6 @@ import { ActionIcon, TextInput, ColorInput, Switch, Button, Fieldset } from "@ma
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import dayjs from "dayjs";
 import { useRef, useMemo, useState } from "react";
 import * as icon from "react-icons/bs";

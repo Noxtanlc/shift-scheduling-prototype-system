@@ -10,7 +10,7 @@ import { notifications } from "@mantine/notifications";
 import { TbCheck } from "react-icons/tb";
 
 export default function Login() {
-    const { token, setToken, setUser } = useAuth();
+    const { setToken, setUser } = useAuth();
 
     const [error, setError] = useState({
         errInput: '',

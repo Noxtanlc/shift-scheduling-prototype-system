@@ -1,5 +1,4 @@
 import { Modal as MantineModal } from "@mantine/core";
-import { ReactNode } from "react";
 
 export default function Modal({ ...props }) {
     const action = props.action;
@@ -51,7 +50,7 @@ export default function Modal({ ...props }) {
                 onClose={() => props.handler.close()}
                 title={(
                     <>
-                        <div className="font-bold text-lg text-white">
+                        <div className="text-lg font-bold text-white">
                             {title}
                         </div>
                     </>

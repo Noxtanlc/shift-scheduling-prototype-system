@@ -18,7 +18,7 @@ export function getShiftCategory(token?: any) {
 export function getShiftData(token?: any) {
   return ({
     queryKey: ['shift'],
-    queryFn: async (token?: any) => {
+    queryFn: async () => {
       const response = await axios.get('/api/shifts', {
         headers: {
           Authorization: `Bearer ${token}`,
