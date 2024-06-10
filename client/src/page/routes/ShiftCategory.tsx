@@ -1,7 +1,6 @@
 import { Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useReducer, useState } from "react";
-import * as Icon from 'react-bootstrap-icons';
 import { notifications } from "@mantine/notifications";
 import { getShiftCategory } from "@/api";
 import { ShiftCategoryTable } from "@/components/DataDisplay";
@@ -11,6 +10,7 @@ import { ShiftCategoryForm } from "@/components/Form";
 import { CSVLink } from "react-csv";
 import { TbDownload } from "react-icons/tb";
 import { queriesApi } from "@/misc/FetchDataApi";
+import { PlusCircle } from "react-bootstrap-icons";
 
 interface initial {
     title: string | undefined;
@@ -178,7 +178,7 @@ export default function ShiftType() {
                 <div className="flex justify-end">
                     {CSVExport()}
                     <Button
-                        leftSection={<Icon.PlusCircle size={16} />}
+                        leftSection={<PlusCircle size={16} />}
                         onClick={() => {
                             modalHandler('Add', 'Add Shift Category');
                             handler.open();

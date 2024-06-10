@@ -5,7 +5,7 @@ import { useForm } from "@mantine/form";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useRef, useMemo, useState } from "react";
-import * as icon from "react-icons/bs";
+import { TbClock } from "react-icons/tb";
 
 export default function ShiftCategoryForm({ ...props }) {
     interface ShiftCategoryForm {
@@ -106,7 +106,7 @@ export default function ShiftCategoryForm({ ...props }) {
 
     const pickerControl = (ref: any) => (
         <ActionIcon variant="subtle" color="gray" onClick={() => ref.current?.showPicker()}>
-            <icon.BsClock size={16} />
+            <TbClock size={16} />
         </ActionIcon>
     );
 

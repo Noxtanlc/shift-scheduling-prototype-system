@@ -2,12 +2,12 @@ import { LocationTable } from "@/components/DataDisplay";
 import { Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useReducer, useState } from "react";
-import * as Icon from 'react-icons/bs';
 import { notifications } from "@mantine/notifications";
 import { LocationForm } from "@/components/Form";
 import Modal from "@/components/Modal";
 import { queriesApi } from "@/misc/FetchDataApi";
 import { useAuth } from "@/misc/AuthProvider";
+import { BsPlusCircle } from "react-icons/bs";
 
 interface InitialNotification {
     action: string,
@@ -47,7 +47,6 @@ const initialState: initial = {
 }
 
 export default function Location() {
-    const { token } = useAuth();
     const InitialNotification: any = {
         action: '',
         title: '',
@@ -171,7 +170,7 @@ export default function Location() {
                 <div className="LocationTable">
                     <div className="flex justify-end">
                         <Button
-                            leftSection={<Icon.BsPlusCircle size={22} />}
+                            leftSection={<BsPlusCircle size={22} />}
                             onClick={() => {
                                 modalHandler('Add', 'Add New Location');
                                 handler.open();
