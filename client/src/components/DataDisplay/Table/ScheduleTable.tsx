@@ -7,11 +7,14 @@ import { ScheduleForm } from "@/components/Form";
 import { useAuth } from "@/misc/AuthProvider";
 import { useTheme } from "@/misc/ThemeProvider";
 import { TbPencil } from "react-icons/tb";
+import { useQueryClient } from "@tanstack/react-query";
+import Loader from "@/common/loader";
 // import Loader from "@/common/loader";
 
 export default function ScheduleTable({ ...props }) {
     const { user } = useAuth();
     const isAdmin = user.isAdmin;
+    const queryClient = useQueryClient();
 
     const [filterText, setFilterText] = useState('');
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -23,7 +26,6 @@ export default function ScheduleTable({ ...props }) {
     });
 
     const [data, setData]: any = useState([]);
-    // const [loading, setLoading]: any = useState(true);
 
     const { theme } = useTheme()!;
 
@@ -112,8 +114,16 @@ export default function ScheduleTable({ ...props }) {
     }, [props.dateValue.numDay])
     */
 
+    const [pending, setPending] = useState(false);
+    useEffect(() => {
+        if (queryClient.isFetching({ queryKey: ['shift'] })) setPending(true)
+        else setPending(false);
+    }, [queryClient.isFetching]);
+
     return (
         <DataTable
+            progressComponent={<Loader />}
+            progressPending={pending}
             columns={columns}
             data={filteredItems}
             responsive

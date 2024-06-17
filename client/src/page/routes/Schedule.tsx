@@ -191,7 +191,6 @@ export default function Schedule() {
                 }
                 case "import": {
                     notifications.show({
-                        autoClose: 5000,
                         title: <div className="font-bold">{notification.title}</div>,
                         message: <div>{notification.response}</div>,
                         color: "green",
@@ -231,7 +230,8 @@ export default function Schedule() {
                 }
                 case "import": {
                     notifications.show({
-                        title: <div className="font-bold">No changes</div>,
+                        autoClose: 10000,
+                        title: <div className="font-bold">Failed</div>,
                         message: <div>{notification.response}</div>,
                         color: "orange",
                         onClose: () => setNotification(InitialNotification),

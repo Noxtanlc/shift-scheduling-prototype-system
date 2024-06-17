@@ -368,7 +368,6 @@ app.post("/api/shifts/import", async (req, res) => {
         }
     }
 
-    console.log(update);
     if (update) {
         res.send({
             response: 'Shifts have been updated!',

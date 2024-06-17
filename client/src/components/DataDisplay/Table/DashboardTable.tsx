@@ -70,6 +70,7 @@ export default function DashboardTable({ ...props }) {
             },
         });
     }
+    
     return (
         <DataTable
             columns={column}
