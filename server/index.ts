@@ -331,6 +331,7 @@ app.post("/api/shifts/import", async (req, res) => {
     const date = year + '-' + month + '-' + 1;
     const days = dayjs(date).daysInMonth();
     const insert = "INSERT INTO `shift` (`FKstaffID`, `start_date`, `end_date`, `st_id`, `ca_id`) VALUES (?, ?, ?, ?, null)";
+    // const update = "UPDATE SET `start_date` = ?, `end_date` = ?, `st_id` = ?, `ca_id` = ? WHERE `start_date` ="
     const shiftCategory = (await db.query<RowDataPacket[]>("SELECT * FROM `shift_category`"))[0];
     var update = false;
     var errMsg = 'No changes are made or ran into a problem...';

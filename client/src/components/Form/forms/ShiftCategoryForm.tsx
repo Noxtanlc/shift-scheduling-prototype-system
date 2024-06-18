@@ -151,22 +151,23 @@ export default function ShiftCategoryForm({ ...props }) {
             <Fieldset disabled={formDisabled} variant="unstyled">
                 <TextInput
                     required
-                    label="Template Name"
-                    placeholder="Enter shift template name"
+                    label="Name"
+                    placeholder="Enter shift category name"
                     key={form.key('name')}
                     {...form.getInputProps('name')}
                 />
                 <TextInput
                     required
                     label="Alias/Code"
-                    placeholder="Enter alias/code"
+                    placeholder="Enter alias/code..."
                     key={form.key('alias')}
                     {...form.getInputProps('alias')}
                 />
                 <ColorInput
                     label="Color Code"
-                    description="Select color code for template"
+                    description="Select color code..."
                     placeholder="Select Color"
+                    defaultValue="#ffffff"
                     key={form.key('color')}
                     {...form.getInputProps('color')}
                 />
@@ -196,14 +197,15 @@ export default function ShiftCategoryForm({ ...props }) {
                     />
                 </div>
                 <Switch
+                    className="w-fit"
                     labelPosition="left"
                     onLabel="ACTIVE"
                     offLabel="DISABLE"
                     label="Status: "
-                    checked={form.values.active}
+                    checked={form.getValues().active}
                     onChange={() => {
                         form.setValues(
-                            { active: !form.values.active }
+                            { active: !form.getValues().active }
                         )
                     }
                     }
