@@ -27,7 +27,10 @@ To run the application, download the source code and extract it whenever you lik
 <br/>
 <p>
   Open CMD inside the folders (client and server, seperately.) or integrated command prompt (Visual Studio Code) and run the command inside each individual folder.
-  <blockquote>npm run dev</blockquote>
+  <blockquote>
+    npm install
+    npm run dev
+  </blockquote>
   
 <div align='center'>
   <image src="https://github.com/Noxtanlc/shift-scheduling-prototype-system/assets/58375587/b96864bd-d7ba-4863-8eef-c6c264c5b301" style="height: 200px"/>
