@@ -28,7 +28,7 @@ To run the application, download the source code and extract it whenever you lik
 <p>
   Open CMD inside the folders (client and server, seperately.) or integrated command prompt (Visual Studio Code) and run the command inside each individual folder.
   <blockquote>
-    <span>npm install</span>
+    <span>npm install</span><br />
     <span>npm run dev</span>
   </blockquote>
   
