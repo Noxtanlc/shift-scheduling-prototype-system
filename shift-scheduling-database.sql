@@ -42,7 +42,7 @@ CREATE TABLE `assigned_staff` (
 
 LOCK TABLES `assigned_staff` WRITE;
 /*!40000 ALTER TABLE `assigned_staff` DISABLE KEYS */;
-INSERT INTO `assigned_staff` VALUES (28,200213163,63),(29,200213166,63),(31,200213164,63),(32,200213156,63),(34,200213162,63),(36,200213169,63),(37,200213168,63),(42,200213158,63),(46,200213157,63);
+INSERT INTO `assigned_staff` VALUES (28,200213163,63),(29,200213166,63),(34,200213162,63),(36,200213169,63),(37,200213168,63),(42,200213158,63),(46,200213157,63);
 /*!40000 ALTER TABLE `assigned_staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,7 +93,7 @@ CREATE TABLE `group` (
 
 LOCK TABLES `group` WRITE;
 /*!40000 ALTER TABLE `group` DISABLE KEYS */;
-INSERT INTO `group` VALUES (63,'Doe');
+INSERT INTO `group` VALUES (63,'Example 1');
 /*!40000 ALTER TABLE `group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +118,7 @@ CREATE TABLE `shift` (
   CONSTRAINT `FKca_ID` FOREIGN KEY (`ca_id`) REFERENCES `control_area` (`ca_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `FKst_ID` FOREIGN KEY (`st_id`) REFERENCES `shift_category` (`id`),
   CONSTRAINT `FKstaff_uid` FOREIGN KEY (`FKstaffID`) REFERENCES `staff_list` (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +157,7 @@ CREATE TABLE `shift_category` (
 
 LOCK TABLES `shift_category` WRITE;
 /*!40000 ALTER TABLE `shift_category` DISABLE KEYS */;
-INSERT INTO `shift_category` VALUES (1,'SHIFT A','SHIFT A','#ff0000','00:00:00','00:00:00',0),(2,'SHIFT B','SHIFT B','#ac59ff','12:00:00','08:00:00',1),(3,'SHIFT C','SHIFT C','#005eff','08:00:00','16:00:00',1),(30,'Apple','AAA','#ab6d6d','00:00:00','05:00:00',1);
+INSERT INTO `shift_category` VALUES (1,'SHIFT A','SHIFT A','#ff0000','00:00:00','00:00:00',0),(2,'SHIFT B','SHIFT B','#ac59ff','12:00:00','08:00:00',1),(3,'SHIFT C','SHIFT C','#005eff','08:00:00','16:00:00',1);
 /*!40000 ALTER TABLE `shift_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +176,7 @@ CREATE TABLE `staff_list` (
   PRIMARY KEY (`staff_no`),
   UNIQUE KEY `staff_no_UNIQUE` (`staff_no`),
   UNIQUE KEY `staff_uid_UNIQUE` (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,7 +185,7 @@ CREATE TABLE `staff_list` (
 
 LOCK TABLES `staff_list` WRITE;
 /*!40000 ALTER TABLE `staff_list` DISABLE KEYS */;
-INSERT INTO `staff_list` VALUES (1,200213156,'Adam','Bright'),(2,200213157,'John','Saddler'),(3,200213158,'Buckler','Doe'),(4,200213159,'Saddie','Doe'),(5,200213160,'James','Doe'),(6,200213161,'Johnny','Sand'),(7,200213162,'Amy','Sand'),(8,200213163,'Roger','Rodney'),(9,200213164,'Amelia','Doe'),(10,200213165,'Ethan','Doe'),(11,200213166,'Connor','Doe'),(12,200213167,'Sammy','Doe'),(13,200213168,'Thomas','Doe'),(14,200213169,'Sebestian','Doe'),(15,200213170,'Ivy','Doe');
+INSERT INTO `staff_list` VALUES (1,200213156,'Adam','Bright'),(2,200213157,'John','Saddler'),(3,200213158,'Buckler','Doe'),(4,200213159,'Saddie','Doe'),(5,200213160,'James','Doe'),(6,200213161,'Johnny','Sand'),(7,200213162,'Amy','Sand'),(8,200213163,'Roger','Rodney'),(9,200213164,'Amelia','Doe'),(10,200213165,'Ethan','Doe'),(11,200213166,'Connor','Doe'),(12,200213167,'Sammy','Doe'),(13,200213168,'Thomas','Doe'),(14,200213169,'Sebestian','Doe'),(15,200213170,'Ivy','Doe'),(16,200213171,'Ivan','Doe'),(17,200213172,'Kyle','Doe'),(18,200213173,'Jon','Doe'),(19,200213174,'Amy','Doe'),(20,200213175,'Chris','Doe'),(21,200213176,'Ali','Doe'),(22,200213177,'Abu','Doe'),(23,200213178,'Vivan','Doe'),(24,200213179,'Sheldom','Doe'),(25,200213180,'Bobby','Lim');
 /*!40000 ALTER TABLE `staff_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,14 +217,6 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES (1,'Admin','admin','admin',1),(2,'User','user','user',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'shift-scheduler'
---
-
---
--- Dumping routines for database 'shift-scheduler'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -235,4 +227,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-15  7:29:13
+-- Dump completed on 2024-06-24 16:00:19

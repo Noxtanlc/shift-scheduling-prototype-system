@@ -25,6 +25,7 @@ const timezoneOffset = 8 * 60;
 const port = process.env.PORT || 3001; // Change the port value if occupied
 
 const config = {
+    port: 3306,
     host: 'localhost', // Database hostname
     user: 'root', // Username to access the database
     password: 'root', // Password
@@ -47,7 +48,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // let's us run our backend server. Message will output in our server terminal
 app.listen(port, () => {
-    console.log("running on port 3001");
+    console.log(`running on port ${port}`);
 })
 
 var refreshTokens: any = [];
