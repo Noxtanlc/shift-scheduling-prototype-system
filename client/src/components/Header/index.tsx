@@ -93,7 +93,7 @@ export default function Header({ ...props }) {
                 {token.accessToken ? (
                     <>
                         <div className='flex gap-3 my-auto font-bold'>
-                            <div className="hidden my-auto sm:block" aria-label="user-name">{user.username !== '' ? user.username : <></>}</div>
+                            <div className="hidden my-auto sm:block" aria-label="username">{user.username !== '' ? user.username : <></>}</div>
                             <div className="my-auto">
                                 <Menu trigger="click" width={120}>
                                     <Menu.Target>

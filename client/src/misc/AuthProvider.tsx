@@ -124,8 +124,8 @@ export default function AuthProvider({ children }: any) {
     (error) => {
       removeToken();
       removeUser();
-      <Navigate to='/login' replace />
-      return Promise.reject(error)
+      Promise.reject(error)
+      return <Navigate to='/login' replace />
     }
   );
 
