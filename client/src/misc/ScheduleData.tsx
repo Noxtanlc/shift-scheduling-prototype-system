@@ -1,8 +1,10 @@
 import { shiftList } from "@/types";
 import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat'
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import isBetween from 'dayjs/plugin/isBetween';
 
 dayjs.extend(customParseFormat);
+dayjs.extend(isBetween);
 
 export function ScheduleData(dateValue: any, staffList: any, shiftData: any) {
     var data: shiftList[] = [];
@@ -10,7 +12,7 @@ export function ScheduleData(dateValue: any, staffList: any, shiftData: any) {
     if (staffList && shiftData) {
         const staff = staffList;
         const shift = shiftData;
-        
+
         const filteredData = shift.filter((ele: any) => {
             const start_date: [year: number, month: number] = ele.start_date.split('-');
             const end_date: [year: any, month: any] = ele.end_date.split('-');
@@ -65,9 +67,11 @@ export function ScheduleData(dateValue: any, staffList: any, shiftData: any) {
                         let sdate = dayjs(ele['start_date']);
                         let sdateFormatted = sdate.format('DD/MM/YYYY');
                         let edate = dayjs(ele['end_date']);
-                        let edateFormatted = edate.format('DD/MM/YYYY')
-                        if (sdate.isBefore(date) && (edate.isAfter(date) && !edate.isBefore(date))) {
+                        let edateFormatted = edate.format('DD/MM/YYYY');
+
+                        if (date.isAfter(sdate) && date.isBetween(sdate, edate)) {
                             overlap = edate.diff(date, 'day');
+                            console.log(overlap);
                             if (overlap !== 0) {
                                 for (let n = 0; n <= overlap; n++) {
                                     staff_ele['shift'].push({
@@ -80,9 +84,9 @@ export function ScheduleData(dateValue: any, staffList: any, shiftData: any) {
                                         ca_id: ele["ca_id"],
                                         ca_alias: ele["ca_alias"]
                                     });
+                                    dayCount++;
                                 }
-                                dayCount += overlap + 1;
-                                days -= overlap + 1;
+                                days -= overlap
                                 dateString = dateValue.year + '-' + dateValue.month + '-' + dayCount;
                                 date = dayjs(new Date(dateString));
                                 dateFormatted = date.format('DD/MM/YYYY');
@@ -94,23 +98,22 @@ export function ScheduleData(dateValue: any, staffList: any, shiftData: any) {
                             range = edate.diff(sdate, "day");
                             if (range > 0) {
                                 for (let n = 0; n <= range; n++) {
-                                    staff_ele['shift'].push({
-                                        shift_id: ele['id'],
-                                        start_date: sdateFormatted,
-                                        end_date: edateFormatted,
-                                        st_id: ele["st_id"],
-                                        st_alias: ele["st_alias"],
-                                        color: ele["color-coding"],
-                                        ca_id: ele["ca_id"],
-                                        ca_alias: ele["ca_alias"]
-                                    });
-                                    if (dayCount !== dateValue.numDay) {
+                                    if (dayCount <= dateValue.numDay) {
+                                        staff_ele['shift'].push({
+                                            shift_id: ele['id'],
+                                            start_date: sdateFormatted,
+                                            end_date: edateFormatted,
+                                            st_id: ele["st_id"],
+                                            st_alias: ele["st_alias"],
+                                            color: ele["color-coding"],
+                                            ca_id: ele["ca_id"],
+                                            ca_alias: ele["ca_alias"]
+                                        });
+
                                         dayCount++;
                                         dateString = dateValue.year + '-' + dateValue.month + '-' + dayCount;
                                         date = dayjs(new Date(dateString));
                                         dateFormatted = date.format('DD/MM/YYYY');
-                                    } else {
-                                        break;
                                     }
                                 }
                                 days -= range;
@@ -131,7 +134,7 @@ export function ScheduleData(dateValue: any, staffList: any, shiftData: any) {
                         }
                     });
 
-                    if (!hasData) {
+                    if (!hasData && dayCount <= dateValue.numDay) {
                         staff_ele['shift'].push({
                             shift_id: null,
                             start_date: dateFormatted,
@@ -149,5 +152,6 @@ export function ScheduleData(dateValue: any, staffList: any, shiftData: any) {
         });
     }
 
+    console.log(data);
     return data;
 }   

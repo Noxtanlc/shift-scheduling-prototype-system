@@ -337,7 +337,7 @@ export default function ScheduleForm({ ...props }) {
 
 
     const filteredStaff = (staff.data as any).filter((ele: any) => ele.staff_id === props.staff_id);
-    const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift.data)[0], [shift.data]);
+    const data = useMemo(() => ScheduleData(dateValue, filteredStaff, shift.data)[0], [shift.data, dateValue]);
 
     return (
         <div className="flex flex-col gap-2 overflow-y-auto md:flex-row">
