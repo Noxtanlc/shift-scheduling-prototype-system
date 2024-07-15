@@ -72,9 +72,9 @@ const generateRefreshToken = (user: any) => {
 app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
-    const [result]:any = await db.query("SELECT * FROM `user`");
+    const [result]: any = await db.query("SELECT * FROM `user`");
 
-    const user = result.filter((ele:any) => ele.username === username)[0];
+    const user = result.filter((ele: any) => ele.username === username)[0];
 
     if (user) {
         if (user.password === password) {
@@ -167,7 +167,7 @@ app.post('/api/auth', async (req, res) => {
 });
 */
 
-app.get('/api/auths' , (req, res) => {
+app.get('/api/auths', (req, res) => {
     return res.json(refreshTokens.length);
 })
 
@@ -335,6 +335,7 @@ app.post("/api/shifts/import", async (req, res) => {
     // const update = "UPDATE SET `start_date` = ?, `end_date` = ?, `st_id` = ?, `ca_id` = ? WHERE `start_date` ="
     const shiftCategory = (await db.query<RowDataPacket[]>("SELECT * FROM `shift_category`"))[0];
     var update = false;
+    var shiftCategoryExist = false;
     var errMsg = 'No changes are made or ran into a problem...';
 
     for (const ele of data) {
@@ -347,18 +348,27 @@ app.post("/api/shifts/import", async (req, res) => {
         }
 
         if (!empty) {
-            await db.query("DELETE FROM `shift` WHERE YEAR(`start_date`) = ? AND MONTH(`start_date`) = ? AND `FKstaffID` = ?", [year, month, ele.ID])
-                .catch((err) => console.log(err));
-
             for (let i = 1; i <= days; i++) {
                 const date = year + '-' + month + '-' + i;
                 if (ele[i] !== '') {
                     const shiftCategoryVal = shiftCategory.filter((val) => val.st_alias.toLowerCase() === ele[i].toLowerCase() || ele[i] === val['id'].toString());
                     if (shiftCategoryVal.length === 0) {
-                        update = false;
                         errMsg = 'Invalid shift category ID/alias/code found in selected CSV shift template. Please use valid shift category ID/alias/code according to the shift category list.';
                         break;
                     } else {
+                        shiftCategoryExist = true;
+                    }
+                }
+            }
+
+            if (shiftCategoryExist) {
+                await db.query("DELETE FROM `shift` WHERE YEAR(`start_date`) = ? AND MONTH(`start_date`) = ? AND `FKstaffID` = ?", [year, month, ele.ID])
+                    .catch((err) => console.log(err));
+
+                for (let i = 1; i <= days; i++) {
+                    const date = year + '-' + month + '-' + i;
+                    if (ele[i] !== '') {
+                        const shiftCategoryVal = shiftCategory.filter((val) => val.st_alias.toLowerCase() === ele[i].toLowerCase() || ele[i] === val['id'].toString());
                         await db.query(insert, [ele.ID, date, date, shiftCategoryVal[0]['id']])
                         .then((res) => {
                             update = true;
